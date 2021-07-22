@@ -42,7 +42,7 @@ let logout = () =>
     }
   })
 
-let apiRequest = (api, count = 1) =>
+let apiRequest = (api, count = 2) =>
     fetch('https://sbhs-timetabl.netlify.app/.netlify/functions/api', {
       method: 'POST',
       headers: {
