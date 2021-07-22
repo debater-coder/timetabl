@@ -35,7 +35,10 @@ let App = () => {
   useEffect(() => {
     if (loggedIn) {
       apiRequest('details/participation')
-        .then(data => setPoints(data.splice(-1)["points"]))
+        .then(data => {
+          console.log(data)
+          setPoints(data.splice(-1)['points'])
+        })
     }
   }, [loggedIn])
 
