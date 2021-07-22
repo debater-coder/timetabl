@@ -51,7 +51,12 @@ let apiRequest = (api) =>
       },
       body: JSON.stringify({ api, token: localStorage.getItem("access_token") })
     })
-      .catch(error => console.error(error))
+      .then(response => {
+        if (!response.ok) {
+          throw Error(`Status code ${response.status}`);
+        }
+        return response
+      })
       .then(response => response.json())
 
 let generateRandomString = () => {
