@@ -7,7 +7,7 @@ exports.handler = async function(event) {
     headers: {
       'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
     },
-    body: `grant_type=authorization_code&code=${body.code}&redirect_uri=https%3A%2F%2Fsbhs-timetabl.netlify.app%2F&client_id=timetabl&client_secret=${process.env.SECRET}`,
+    body: body["grantType"] === "true" ? `grant_type=refresh_token&refresh_token=${body.code}&client_id=timetabl&client_secret=${process.env.SECRET}`:`grant_type=authorization_code&code=${body.code}&redirect_uri=https%3A%2F%2Fsbhs-timetabl.netlify.app%2F&client_id=timetabl&client_secret=${process.env.SECRET}`,
   });
   if (!response.ok) {
     // NOT res.status >= 200 && res.status < 300

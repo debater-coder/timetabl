@@ -21,7 +21,7 @@ let finalize_login = (code, state) => {
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
       },
-      body: JSON.stringify({ code })
+      body: JSON.stringify({ code, refresh: "false"})
     })
       .then(response  => response.json())
       .then(data => {
@@ -30,20 +30,19 @@ let finalize_login = (code, state) => {
       })
   }
 
-let logout = () => {
-    return new Promise( (resolve, reject) => {
-      try {
-        // Simulate log out
-        localStorage.removeItem("access_token")
-        localStorage.removeItem("refresh_token")
-        resolve()
-      } catch {
-        reject()
-      }
-    })
-  }
+let logout = () =>
+  new Promise((resolve, reject) => {
+    try {
+      // Simulate log out
+      localStorage.removeItem('access_token');
+      localStorage.removeItem('refresh_token');
+      resolve();
+    } catch {
+      reject();
+    }
+  })
 
-let apiRequest = (api) =>
+let apiRequest = (api, count = 1) =>
     fetch('https://sbhs-timetabl.netlify.app/.netlify/functions/api', {
       method: 'POST',
       headers: {
@@ -59,10 +58,24 @@ let apiRequest = (api) =>
       })
       .then(response => response.json())
       .catch(reason => {
-        if (reason.message === "Status code 401") {
-          console.log("I caught you!")
+        if (reason.message === "Status code 401" && count > 0) {
+          refresh()
+            .then(() => apiRequest(api, count - 1))
         } else throw reason
       })
+
+let refresh = () =>
+  fetch("https://sbhs-timetabl.netlify.app/.netlify/functions/auth", {
+    method: "POST",
+    headers: {
+      'Content-Type': 'application/json;charset=utf-8',
+    },
+    body: JSON.stringify({ code: localStorage.getItem("refresh_token"), refresh: "true"})
+  })
+    .then(response => response.json())
+    .then(data => {
+      localStorage.setItem("access_token", data["access_token"])
+    })
 
 let generateRandomString = () => {
     let array = new Uint32Array(28);
