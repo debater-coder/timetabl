@@ -75,6 +75,7 @@ let refresh = () =>
   })
     .then(response => response.json())
     .then(data => {
+      console.log("Retreived access token is: " + data["access_token"])
       localStorage.setItem("access_token", data["access_token"])
     })
 
