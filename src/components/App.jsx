@@ -36,6 +36,7 @@ let App = () => {
     if (loggedIn) {
       apiRequest('details/participation')
         .then(data => {
+          console.log(data.splice(-1))
           setPoints(data.splice(-1).points)
         })
     }
