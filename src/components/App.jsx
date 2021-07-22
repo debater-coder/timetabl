@@ -10,7 +10,8 @@ let App = () => {
       {
         loggedIn ? <button onClick={user.logout}>Log out</button> : <button onClick={user.login}>Log in</button>
       }
-      <p>Hello, world!</p>
+      <p>Hello, {loggedIn ? user.apiRequest("details/userinfo")["givenName"] : "Anonymous"}</p>
+      {loggedIn ? <p>You have {user.apiRequest("details/participation")[-1]["points"]} award scheme points</p> : <p>You are not logged in</p>}
     </div>
   );
 };

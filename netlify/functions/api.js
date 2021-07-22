@@ -3,7 +3,7 @@ const fetch = require('node-fetch');
 const handler = async function(event) {
   try {
     let body = JSON.parse(event.body);
-    const response = await fetch('https://student.sbhs.net.au/api/' + body.api, {
+    const response = await fetch('https://student.sbhs.net.au/api/' + encodeURIComponent(body.api.split("/")[0]) + "/" + encodeURIComponent(body.api.split("/")[1]) + ".json", {
       headers: {
         'Authorization': 'Bearer ' + body.token,
       },
