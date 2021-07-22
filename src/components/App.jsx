@@ -8,21 +8,21 @@ let App =() => {
   let [name, setName] = useState("")
   let [points, setPoints] = useState(-1)
 
-  useEffect(() => {
-    if (loggedIn) {
-      console.log("foo")
-      user.apiRequest("details/userinfo")
-        .then(data => setName(data["givenName"] + data["surname"]))
-    }
-  }, [loggedIn])
-
-  useEffect(() => {
-    if (loggedIn) {
-      console.log("bar")
-      user.apiRequest("details/participation")
-        .then(data => setPoints(data.splice(-1)["points"]))
-    }
-  }, [loggedIn])
+  // useEffect(() => {
+  //   if (loggedIn) {
+  //     console.log("foo")
+  //     user.apiRequest("details/userinfo")
+  //       .then(data => setName(data["givenName"] + data["surname"]))
+  //   }
+  // }, [loggedIn])
+  //
+  // useEffect(() => {
+  //   if (loggedIn) {
+  //     console.log("bar")
+  //     user.apiRequest("details/participation")
+  //       .then(data => setPoints(data.splice(-1)["points"]))
+  //   }
+  // }, [loggedIn])
 
   return (
     <div className='App'>
