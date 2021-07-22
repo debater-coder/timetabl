@@ -1,20 +1,35 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import User from '../User';
 
-let App = async () => {
+let App =() => {
   let [loggedIn, setLoggedIn] = useState(false)
   let [user] = useState(new User(setLoggedIn));
-  let participation = await user.apiRequest("details/participation")
+  let [name, setName] = useState("")
+  let [points, setPoints] = useState(-1)
 
-  console.log(participation)
+  useEffect(() => {
+    if (loggedIn) {
+      user.apiRequest("details/userinfo")
+        .then(data => setName(data["givenName"] + data["surname"]))
+    }
+  }, [loggedIn])
+
+  useEffect(() => {
+    if (loggedIn) {
+      user.apiRequest("details/participation")
+        .then(data => setPoints(data.splice(-1)["points"]))
+    }
+  }, [loggedIn])
+
   return (
     <div className='App'>
       {
         loggedIn ? <button onClick={user.logout}>Log out</button> : <button onClick={user.login}>Log in</button>
       }
-      <p>Hello, {loggedIn ? await user.apiRequest("details/userinfo")["givenName"] : "Anonymous"}</p>
-      {loggedIn ? <p>You have {participation.pop()["points"]} award scheme points</p> : <p>You are not logged in</p>}
+      {name !== "" ? <p>Hello, {name}!</p> : ""}
+      {points !== -1 ? <p>You have {points} award scheme points!</p> : ""}
+
     </div>
   );
 };
