@@ -5,8 +5,8 @@ import User from '../User';
 let App =() => {
   let [loggedIn, setLoggedIn] = useState(false)
   let [user] = useState(new User(setLoggedIn));
-  let [name, setName] = useState("")
-  let [points, setPoints] = useState(-1)
+  // let [name, setName] = useState("")
+  // let [points, setPoints] = useState(-1)
 
   // useEffect(() => {
   //   if (loggedIn) {
