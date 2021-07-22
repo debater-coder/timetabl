@@ -10,6 +10,7 @@ let App =() => {
 
   useEffect(() => {
     if (loggedIn) {
+      console.log("foo")
       user.apiRequest("details/userinfo")
         .then(data => setName(data["givenName"] + data["surname"]))
     }
@@ -17,6 +18,7 @@ let App =() => {
 
   useEffect(() => {
     if (loggedIn) {
+      console.log("bar")
       user.apiRequest("details/participation")
         .then(data => setPoints(data.splice(-1)["points"]))
     }
