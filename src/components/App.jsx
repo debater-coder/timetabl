@@ -7,9 +7,7 @@ let App = () => {
   return (
     <div className='App'>
       {
-        user.logged_in ?
-        <button onClick={user.login}>Log in</button> :
-        <button onClick={user.logout}>Log out</button>
+        user.logged_in ? <button onClick={user.logout}>Log out</button> : <button onClick={user.login}>Log in</button>
       }
       <p>Hello, world!</p>
     </div>
