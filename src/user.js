@@ -58,7 +58,11 @@ let apiRequest = (api) =>
         return response
       })
       .then(response => response.json())
-      .catch(reason => console.log(reason))
+      .catch(reason => {
+        if (reason === Error(`Status code 401`)) {
+          console.log("I caught you!")
+        } else throw reason
+      })
 
 let generateRandomString = () => {
     let array = new Uint32Array(28);
