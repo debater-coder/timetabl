@@ -58,6 +58,7 @@ let apiRequest = (api) =>
         return response
       })
       .then(response => response.json())
+      .catch(reason => console.log(reason))
 
 let generateRandomString = () => {
     let array = new Uint32Array(28);
