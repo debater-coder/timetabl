@@ -7,8 +7,8 @@ class User {
     window.history.replaceState({}, null, '/');
 
     // If we just logged in, claim an access token
-    if ('state' in this.query && 'code' in this.query) {
-      this._finalize_login()
+    if ('code' in this.query && 'state' in this.query) {
+      this._finalize_login(this.query.code, this.query.state)
     }
   }
 
