@@ -56,7 +56,7 @@ class User {
     this.setLogged_in(false)
   }
 
-  asyncApiRequest = (api) =>
+  apiRequest = (api) =>
     fetch('https://sbhs-timetabl.netlify.app/.netlify/functions/api', {
       method: 'POST',
       headers: {
@@ -65,8 +65,6 @@ class User {
       body: JSON.stringify({ api, token: localStorage.getItem("access_token") })
     })
       .then(response => response.json())
-
-  apiRequest = async (api) => await this.asyncApiRequest(api)
 
   generateRandomString = () => {
     let array = new Uint32Array(28);
