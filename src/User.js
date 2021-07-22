@@ -9,6 +9,10 @@ class User {
     if ('code' in this.query && 'state' in this.query) {
       this._finalize_login(this.query.code, this.query.state)
     }
+    // if we have an access token already then we're already logged in
+    else if (localStorage.getItem("access_token") !== null && localStorage.getItem("refresh_token") !== null) {
+      this.setLogged_in(true)
+    }
   }
 
   login = () => {
