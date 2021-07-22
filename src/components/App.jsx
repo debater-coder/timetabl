@@ -3,7 +3,7 @@ import './App.css';
 import User from '../User';
 
 let App = () => {
-  let [user] = useState(User);
+  let [user] = useState(new User);
   return (
     <div className='App'>
       {
