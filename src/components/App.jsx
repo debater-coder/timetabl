@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { finalize_login, login, logout } from '../user';
+import { apiRequest, finalize_login, login, logout } from '../user';
 
 let App = () => {
   let [loggedIn, setLoggedIn] = useState(false)
   let [name, setName] = useState("")
   let [points, setPoints] = useState(-1)
 
-    // Equivalent to ComponentDidMount
+  // Equivalent to ComponentDidMount
   useEffect(() => {
     // Stash the query string away
     let query = Object.fromEntries(new URLSearchParams(window.location.search).entries());
@@ -24,6 +24,20 @@ let App = () => {
       setLoggedIn(true)
     }
   })
+
+  useEffect(() => {
+    if (loggedIn) {
+      apiRequest('details/userinfo')
+        .then(data => setName(data["givenName"] + " " + data["surname"]))
+    }
+  }, [loggedIn])
+
+  useEffect(() => {
+    if (loggedIn) {
+      apiRequest('details/participation')
+        .then(data => setPoints(Number(data.splice(-1)["points"])))
+    }
+  }, [loggedIn])
 
 
   return (
