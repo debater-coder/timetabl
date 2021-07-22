@@ -11,6 +11,7 @@ class User {
     }
     // if we have an access token already then we're already logged in
     else if (localStorage.getItem("access_token") !== null && localStorage.getItem("refresh_token") !== null) {
+      console.log("FOO")
       this.setLogged_in(true)
     }
   }
