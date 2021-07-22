@@ -29,7 +29,6 @@ class User {
       console.error("Invalid state!")
       return
     }
-    this.setLogged_in(true)
     // Request token
     fetch('https://sbhs-timetabl.netlify.app/.netlify/functions/auth', {
       method: "POST",
@@ -42,6 +41,7 @@ class User {
       .then(data => {
         localStorage.setItem('access_token', data['access_token']);
         localStorage.setItem('refresh_token', data['refresh_token']);
+        this.setLogged_in(true)
       })
   }
 
