@@ -53,13 +53,13 @@ let apiRequest = (api) =>
     })
       .then(response => {
         if (!response.ok) {
-          throw Error(`Status code ${response.status}`);
+          throw new Error(`Status code ${response.status}`);
         }
         return response
       })
       .then(response => response.json())
       .catch(reason => {
-        if (reason === Error(`Status code 401`)) {
+        if (reason.message === "Status code 401") {
           console.log("I caught you!")
         } else throw reason
       })
