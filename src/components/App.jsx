@@ -29,8 +29,8 @@ let App =() => {
       {
         loggedIn ? <button onClick={user.logout}>Log out</button> : <button onClick={user.login}>Log in</button>
       }
-      {name !== "" ? <p>Hello, {name}!</p> : ""}
-      {points !== -1 ? <p>You have {points} award scheme points!</p> : ""}
+      {/*{ name !== "" ? <p>Hello, {name}!</p> : ""}*/}
+      {/*{points !== -1 ? <p>You have {points} award scheme points!</p> : ""}*/}
 
     </div>
   );
