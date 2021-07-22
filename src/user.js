@@ -73,7 +73,7 @@ let refresh = () =>
     },
     body: JSON.stringify({ code: localStorage.getItem("refresh_token"), refresh: "true"})
   })
-    .then(response => {console.log(response); return response})
+    .then(response => {console.log(response.text()); return response})
     .then(response => response.json())
     .then(data => {
       console.log("Retreived access token is: " + data["access_token"])
