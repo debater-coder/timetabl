@@ -3,11 +3,12 @@ import './App.css';
 import User from '../User';
 
 let App = () => {
-  let [user] = useState(new User);
+  let [loggedIn, setLoggedIn] = useState(false)
+  let [user] = useState(new User(setLoggedIn));
   return (
     <div className='App'>
       {
-        user.logged_in ? <button onClick={user.logout}>Log out</button> : <button onClick={user.login}>Log in</button>
+        loggedIn ? <button onClick={user.logout}>Log out</button> : <button onClick={user.login}>Log in</button>
       }
       <p>Hello, world!</p>
     </div>

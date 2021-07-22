@@ -1,7 +1,6 @@
 class User {
-  constructor() {
-    this.logged_in = false
-
+  constructor(setLogged_in) {
+    this.setLogged_in = setLogged_in
     // Stash away the query object then dispose of it
     this.query = Object.fromEntries(new URLSearchParams(window.location.search).entries());
     window.history.replaceState({}, null, '/');
@@ -43,7 +42,7 @@ class User {
       .then(data => {
         localStorage.setItem('access_token', data['access_token']);
         localStorage.setItem('refresh_token', data['refresh_token']);
-        this.logged_in = true
+        this.setLogged_in(true)
       })
   }
 
@@ -51,7 +50,7 @@ class User {
     // Simulate log out
     localStorage.removeItem("access_token")
     localStorage.removeItem("refresh_token")
-    this.logged_in = false
+    this.setLogged_in(false)
   }
 
   generateRandomString = () => {
