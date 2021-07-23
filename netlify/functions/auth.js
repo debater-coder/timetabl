@@ -11,7 +11,7 @@ exports.handler = async function(event) {
   });
   if (!response.ok) {
     // NOT res.status >= 200 && res.status < 300
-    return { statusCode: response.status, body: response.body };
+    return { statusCode: response.status, body: JSON.stringify(response.body) };
   }
   let result = await response.json();
 
