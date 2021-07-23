@@ -60,7 +60,7 @@ let apiRequest = (api, count = 2) =>
       .catch(reason => {
         if (reason.message === "Status code 401" && count > 0) {
           console.log("Invalid access token... Refreshing token")
-          refresh()
+          return refresh()
             .then(() => apiRequest(api, count - 1))
         } else throw reason
       })
