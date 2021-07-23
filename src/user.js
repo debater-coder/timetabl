@@ -1,11 +1,3 @@
-const fetch_retry = async (url, options, n) => {
-  try {
-    return await fetch(url, options)
-  } catch(err) {
-    if (n === 1) throw err;
-    return await fetch_retry(url, options, n - 1);
-  }
-};
 
 let login = () => {
     // Generate state then redirect to authorize page
@@ -51,28 +43,46 @@ let logout = () =>
     }
   })
 
-let apiRequest = (api, count = 3) =>
-    fetch_retry('https://sbhs-timetabl.netlify.app/.netlify/functions/api', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-      },
-      body: JSON.stringify({ api, token: localStorage.getItem("access_token") })
-    }, count)
-      .then(response => {
-        if (!response.ok) {
-          throw new Error(`Status code ${response.status}`);
-        }
-        return response
-      })
-      .then(response => response.json())
-      .catch(reason => {
-        if (reason.message === "Status code 401" && count > 0) {
-          console.log("Invalid access token... Refreshing token")
-          refresh()
-        }
-        throw reason
-      })
+let apiRequest = async (api, count = 3) => {
+
+  let response = await fetch("https://sbhs-timetabl.netlify.app/.netlify/functions/api", {
+    method: "POST",
+    headers: {
+      'Content-Type': "application/json;charset=utf-8"
+    },
+    body: JSON.stringify({ api, token: localStorage.getItem("access_token")})
+  })
+
+  if (response.status === 401 && count !== 1) {
+    await refresh()
+    return await apiRequest(api, count - 1);
+  } else if (!response.ok) {
+    throw new Error("Status " + response.status)
+  }
+
+  return await response.json()
+}
+    // fetch_retry('https://sbhs-timetabl.netlify.app/.netlify/functions/api', {
+    //   method: 'POST',
+    //   headers: {
+    //     'Content-Type': 'application/json;charset=utf-8',
+    //   },
+    //   body: JSON.stringify({ api, token: localStorage.getItem("access_token") })
+    // }, count)
+    //   .then(response => {
+    //     if (!response.ok) {
+    //       throw new Error(`Status code ${response.status}`);
+    //     }
+    //     return response
+    //   })
+    //   .then(response => response.json())
+    //   .catch(reason => {
+    //     if (reason.message === "Status code 401" && count > 0) {
+    //       console.log("Invalid access token... Refreshing token")
+    //       refresh()
+    //     }
+    //     throw reason
+    //   })
 
 let refresh = () =>
   fetch("https://sbhs-timetabl.netlify.app/.netlify/functions/auth", {
