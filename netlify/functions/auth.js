@@ -9,10 +9,6 @@ exports.handler = async function(event) {
     },
     body: body["refresh"] === "true" ? `grant_type=refresh_token&refresh_token=${body.code}&client_id=timetabl&client_secret=${process.env.SECRET}`:`grant_type=authorization_code&code=${body.code}&redirect_uri=https%3A%2F%2Fsbhs-timetabl.netlify.app%2F&client_id=timetabl&client_secret=${process.env.SECRET}`,
   });
-  if (!response.ok) {
-    // NOT res.status >= 200 && res.status < 300
-    return { statusCode: response.status, body: JSON.stringify(response.body) };
-  }
   let result = await response.json();
 
   return {
