@@ -54,35 +54,16 @@ let apiRequest = async (api, count = 3) => {
   })
 
   if (response.status === 401 && count !== 1) {
-    await refresh()
-    return await apiRequest(api, count - 1);
+    let access_token = await refresh()
+    if (access_token) {
+      return await apiRequest(api, count - 1);
+    }
   } else if (!response.ok) {
     throw new Error("Status " + response.status)
   }
 
   return await response.json()
 }
-    // fetch_retry('https://sbhs-timetabl.netlify.app/.netlify/functions/api', {
-    //   method: 'POST',
-    //   headers: {
-    //     'Content-Type': 'application/json;charset=utf-8',
-    //   },
-    //   body: JSON.stringify({ api, token: localStorage.getItem("access_token") })
-    // }, count)
-    //   .then(response => {
-    //     if (!response.ok) {
-    //       throw new Error(`Status code ${response.status}`);
-    //     }
-    //     return response
-    //   })
-    //   .then(response => response.json())
-    //   .catch(reason => {
-    //     if (reason.message === "Status code 401" && count > 0) {
-    //       console.log("Invalid access token... Refreshing token")
-    //       refresh()
-    //     }
-    //     throw reason
-    //   })
 
 let refresh = () =>
   fetch("https://sbhs-timetabl.netlify.app/.netlify/functions/auth", {
@@ -95,8 +76,8 @@ let refresh = () =>
     .then(response => response.json())
     .then(data => {
       console.log(data)
-      console.log("Retreived access token is: " + data["access_token"])
       localStorage.setItem("access_token", data["access_token"])
+      return data["access_token"]
     })
 
 let generateRandomString = () => {
