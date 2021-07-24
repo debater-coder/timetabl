@@ -55,8 +55,8 @@ let apiRequest = async (api, count = 3) => {
 
   if (response.status === 401 && count !== 1) {
     let access_token = await refresh()
-    console.log(access_token)
-    if (access_token && access_token !== "undefined") {
+    if (access_token !== undefined && access_token !== "undefined") {
+      console.log(access_token)
       return await apiRequest(api, count - 1);
     }
   } else if (!response.ok) {
