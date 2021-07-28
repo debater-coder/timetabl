@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import { apiRequest, finalize_login, login, logout } from '../user';
+import { apiRequest, finalize_login, login, logout, refresh } from '../user';
 
 
 let App = () => {
@@ -29,6 +29,11 @@ let App = () => {
   useEffect(() => {
     if (loggedIn) {
       apiRequest('details/userinfo')
+        .catch(error => {
+          if (error.message === "Status 401") {
+
+          } else throw error
+        })
         .then(data => setName(data["givenName"] + " " + data["surname"]))
     }
   }, [loggedIn])

@@ -43,7 +43,7 @@ let logout = () =>
     }
   })
 
-let apiRequest = async (api, count = 3) => {
+let apiRequest = async (api) => {
 
   let response = await fetch("https://sbhs-timetabl.netlify.app/.netlify/functions/api", {
     method: "POST",
@@ -53,13 +53,7 @@ let apiRequest = async (api, count = 3) => {
     body: JSON.stringify({ api, token: localStorage.getItem("access_token")})
   })
 
-  if (response.status === 401 && count !== 1) {
-    let access_token = await refresh()
-    if (access_token !== undefined && access_token !== "undefined") {
-      console.log(access_token)
-      return await apiRequest(api, count - 1);
-    }
-  } else if (!response.ok) {
+  if (!response.ok) {
     throw new Error("Status " + response.status)
   }
 
@@ -78,7 +72,6 @@ let refresh = () =>
     .then(data => {
       console.log(data)
       localStorage.setItem("access_token", data["access_token"])
-      return data["access_token"]
     })
 
 let generateRandomString = () => {
@@ -87,4 +80,4 @@ let generateRandomString = () => {
     return Array.from(array, dec => ('0' + dec.toString(16)).substr(-2)).join('');
 };
 
-export {login, logout, apiRequest, finalize_login}
+export {login, logout, apiRequest, finalize_login, refresh}
