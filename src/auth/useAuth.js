@@ -85,7 +85,6 @@ export default (config, store= localStorage) => {
       }
     })
     let data = await response.text()
-    console.log(data)
     return data ? JSON.parse(data) : {}
   }
 
