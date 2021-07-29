@@ -1,39 +1,69 @@
 import React, { useEffect, useState } from 'react';
 import './App.css';
-import useAuth from '../auth/useAuth';
-import config from '../config';
+import { apiRequest, finalize_login, login, logout, refresh } from '../user';
+
 
 let App = () => {
-  let {loggedIn, authState, login, logout, apiRequest} = useAuth(config)
-  let [name, setName] = useState('');
-  let [points, setPoints] = useState(-1);
+  let [loggedIn, setLoggedIn] = useState(false)
+  let [name, setName] = useState("")
+  let [points, setPoints] = useState(-1)
 
+  // Equivalent to ComponentDidMount
+  useEffect(() => {
+    // Stash the query string away
+    let query = Object.fromEntries(new URLSearchParams(window.location.search).entries());
+    window.history.replaceState({}, null, '/');
+
+    if ("code" in query && "state" in query) {
+      finalize_login(query.code, query.state).then(
+        () => {
+          setLoggedIn(true)
+        }
+      )
+    } else if (localStorage.getItem("access_token") !== null && localStorage.getItem("refresh_token") !== null) {
+      // We are already logged in
+      setLoggedIn(true)
+    }
+  })
 
   useEffect(() => {
     if (loggedIn) {
-      // On login
-      apiRequest("details/userinfo.json").then(data => setName(data['givenName'] + " " +  data['surname']))
-      apiRequest("details/participation.json").then(data => setPoints(data.slice(-1)[0]["points"]))
-    } else {
-      // On logout
-      setPoints(-1)
-      setName('')
+      apiRequest('details/userinfo')
+        .catch(error => {
+          if (error.message === "Status 401") {
+
+          } else throw error
+        })
+        .then(data => setName(data["givenName"] + " " + data["surname"]))
     }
   }, [loggedIn])
 
-  return <div className='App'>
-    {
-      authState ?
-        loggedIn ?
-          <button onClick={logout}>Log out</button> :
-          <button onClick={login}>Log in</button>
-        : <p>Loading...</p>
+  useEffect(() => {
+    if (loggedIn) {
+      apiRequest('details/participation')
+        .then(data => {
+          setPoints(data.splice(-1)[0].points)
+        })
     }
+  }, [loggedIn])
 
-    {name !== '' ? <p>Hello, {name}!</p> : ''}
-    {points !== -1 ? <p>You have {points} award scheme points!</p> : ''}
 
-  </div>;
+  return (
+    <div className='App'>
+      {
+        loggedIn ?
+          <button onClick={
+            () => logout().then(() => setLoggedIn(false))
+          }>Log out</button> :
+
+          <button onClick={login}>Log in</button>
+      }
+
+      { name !== "" ? <p>Hello, {name}!</p> : ""}
+      {points !== -1 ? <p>You have {points} award scheme points!</p> : ""}
+
+    </div>
+  );
 };
 
 
