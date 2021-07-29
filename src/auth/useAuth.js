@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 export default (config, store= localStorage) => {
   const [loggedIn, setLoggedIn] = useState(false)
@@ -68,64 +68,81 @@ export default (config, store= localStorage) => {
       + "&code_challenge_method=S256";
   }
 
+  // Logout Function
   const logout = () => {
     store.removeItem("access_token")
     store.removeItem("refresh_token")
     setLoggedIn(false)
   }
 
+  // API request function
+  const apiRequest = async endpoint => {
+    let response = await fetch(config.api_endpoint + "/" + endpoint, {
+      method: "POST",
+      body: "access_token=" + store.getItem("access_token"),
+      headers: {
+        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
+      }
+    })
+    let data = await response.text()
+    console.log(data)
+    return data ? JSON.parse(data) : {}
+  }
+
   /////////////////////////////////////////////////////////////////
   // OAUTH REDIRECT HANDLING
   /////////////////////////////////////////////////////////////////
+  useEffect(() => {
+    let query = Object.fromEntries(new URLSearchParams(window.location.search).entries());
+    window.history.replaceState({}, null, '/');
 
-  let query = Object.fromEntries(new URLSearchParams(window.location.search).entries());
-  window.history.replaceState({}, null, '/');
-
-  if (query.error) {
-    throw new Error(query.error + "\n\n" + query.error_description)
-  }
-
-  // If the server returned an authorization code, attempt to exchange it for an access token
-  if (query.code) {
-
-    // Verify state matches what we set at the beginning
-    if(localStorage.getItem("pkce_state") !== query.state) {
-      alert("Invalid state");
-    } else {
-      fetch(config.token_endpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-        },
-        body: new URLSearchParams({
-          grant_type: "authorization_code",
-          code: query.code,
-          client_id: config.client_id,
-          redirect_uri: config.redirect_uri,
-          code_verifier: localStorage.getItem("pkce_code_verifier")
-        })
-      }).then(response => {
-        if (!response.ok) {throw new Error(`Status ${response.status}`)}
-        return response
-      })
-        .then(response => response.json())
-        .then(body => {
-          store.setItem("access_token", body["access_token"])
-          store.setItem("refresh_token", body["refresh_token"])
-          setLoggedIn(true)
-          setAuthState(true)
-        })
+    if (query.error) {
+      throw new Error(query.error + '\n\n' + query.error_description);
     }
 
-    // Clean these up since we don't need them anymore
-    store.removeItem("pkce_state");
-    store.removeItem("pkce_code_verifier");
-  } else if (store.getItem("access_token") && store.getItem("refresh_token")) {
-    setLoggedIn(true)
-    setAuthState(true)
-  } else {
-    setAuthState(true)
-  }
+    // If the server returned an authorization code, attempt to exchange it for an access token
+    if (query.code) {
 
-  return {loggedIn, login, authState, logout}
+      // Verify state matches what we set at the beginning
+      if (localStorage.getItem('pkce_state') !== query.state) {
+        alert('Invalid state');
+      } else {
+        fetch(config.token_endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          },
+          body: new URLSearchParams({
+            grant_type: 'authorization_code',
+            code: query.code,
+            client_id: config.client_id,
+            redirect_uri: config.redirect_uri,
+            code_verifier: localStorage.getItem('pkce_code_verifier'),
+          }),
+        }).then(response => {
+          if (!response.ok) {
+            throw new Error(`Status ${response.status}`);
+          }
+          return response;
+        })
+          .then(response => response.json())
+          .then(body => {
+            store.setItem('access_token', body['access_token']);
+            store.setItem('refresh_token', body['refresh_token']);
+            setLoggedIn(true);
+            setAuthState(true);
+          });
+      }
+
+      // Clean these up since we don't need them anymore
+      store.removeItem('pkce_state');
+      store.removeItem('pkce_code_verifier');
+    } else if (store.getItem('access_token') && store.getItem('refresh_token')) {
+      setLoggedIn(true);
+      setAuthState(true);
+    } else {
+      setAuthState(true);
+    }
+  }, [])
+  return {loggedIn, login, authState, logout, apiRequest}
 }
