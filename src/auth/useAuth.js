@@ -3,7 +3,8 @@ import { useEffect, useState } from 'react';
 export default (config, store= localStorage) => {
   const [loggedIn, setLoggedIn] = useState(false)
   const [authState, setAuthState] = useState(false)
-
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  
   /////////////////////////////////////////////////////////////////////
   // PKCE HELPER FUNCTIONS
   ////////////////////////////////////////////////////////////////////
@@ -75,8 +76,33 @@ export default (config, store= localStorage) => {
     setLoggedIn(false)
   }
 
+  const refresh = () => {
+    return new Promise(((resolve, reject) => {
+      console.log(isRefreshing);
+      setIsRefreshing(true);
+      resolve(fetch(config.token_endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+        },
+        body: new URLSearchParams({
+          'grant_type': 'refresh_token',
+          'client_id': config.client_id,
+          'refresh_token': store.getItem('refresh_token'),
+          'code_verifier': store.getItem('pkce_code_verifier'),
+        }),
+      }));
+    }))
+      .then(response => response.json())
+      .then(data => {
+        if ('access_token' in data) {
+          store.setItem('access_token', data['access_token']);
+        }
+      });
+  }
+
   // API request function
-  const apiRequest = async endpoint => {
+  const apiRequest = async (endpoint, try_again = true) => {
     let response = await fetch(config.api_endpoint + "/" + endpoint, {
       method: "POST",
       body: "access_token=" + store.getItem("access_token"),
@@ -84,8 +110,15 @@ export default (config, store= localStorage) => {
         "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
       }
     })
-    let data = await response.text()
-    return data ? JSON.parse(data) : {}
+    if (!response.ok) {
+      if (response.status === 401 && try_again && !isRefreshing) {
+        await refresh()
+        return apiRequest(endpoint, false)
+      } else throw new Error('Status ' + response.status);
+    } else {
+      let data = await response.text()
+      return data ? JSON.parse(data) : {}
+    }
   }
 
   /////////////////////////////////////////////////////////////////
@@ -103,7 +136,7 @@ export default (config, store= localStorage) => {
     if (query.code) {
 
       // Verify state matches what we set at the beginning
-      if (localStorage.getItem('pkce_state') !== query.state) {
+      if (store.getItem('pkce_state') !== query.state) {
         alert('Invalid state');
       } else {
         fetch(config.token_endpoint, {
@@ -116,7 +149,7 @@ export default (config, store= localStorage) => {
             code: query.code,
             client_id: config.client_id,
             redirect_uri: config.redirect_uri,
-            code_verifier: localStorage.getItem('pkce_code_verifier'),
+            code_verifier: store.getItem('pkce_code_verifier'),
           }),
         }).then(response => {
           if (!response.ok) {
@@ -135,7 +168,7 @@ export default (config, store= localStorage) => {
 
       // Clean these up since we don't need them anymore
       store.removeItem('pkce_state');
-      store.removeItem('pkce_code_verifier');
+      // store.removeItem('pkce_code_verifier');
     } else if (store.getItem('access_token') && store.getItem('refresh_token')) {
       setLoggedIn(true);
       setAuthState(true);
