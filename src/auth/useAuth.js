@@ -139,17 +139,14 @@ export default (config, store= localStorage) => {
       if (store.getItem('pkce_state') !== query.state) {
         alert('Invalid state');
       } else {
-        fetch(config.token_endpoint, {
+        fetch(config.proxy_endpoint, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'Content-Type': 'application/json; charset=UTF-8',
           },
-          body: new URLSearchParams({
-            grant_type: 'authorization_code',
-            code: query.code,
-            client_id: config.client_id,
-            redirect_uri: config.redirect_uri,
-            code_verifier: store.getItem('pkce_code_verifier'),
+          body: JSON.stringify({
+            "code": query.code,
+            "verifier": store.getItem("pkce_code_verifier")
           }),
         }).then(response => {
           if (!response.ok) {
@@ -158,9 +155,7 @@ export default (config, store= localStorage) => {
           return response;
         })
           .then(response => response.json())
-          .then(body => {
-            store.setItem('access_token', body['access_token']);
-            store.setItem('refresh_token', body['refresh_token']);
+          .then(() => {
             setLoggedIn(true);
             setAuthState(true);
           });
@@ -168,7 +163,7 @@ export default (config, store= localStorage) => {
 
       // Clean these up since we don't need them anymore
       store.removeItem('pkce_state');
-      // store.removeItem('pkce_code_verifier');
+      store.removeItem('pkce_code_verifier');
     } else if (store.getItem('access_token') && store.getItem('refresh_token')) {
       setLoggedIn(true);
       setAuthState(true);
