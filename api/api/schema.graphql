@@ -12,6 +12,7 @@ type Query {
 type BellsMeta {
     bellsAltered: Boolean
     bellsAlteredReason: String
+    serverTimezone: Int
     bells: [Bell!]
 }
 

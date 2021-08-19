@@ -3,35 +3,32 @@ const path = require('path');
 const fs = require('fs');
 const fetch = require('node-fetch');
 
+const fetch_api = (endpoint, parameters={}, event, authenticated=false) =>
+  fetch("https://student.sbhs.net.au/api/" + endpoint + "?" + new URLSearchParams(parameters))
+    .then(res => res.json())
+
 const resolvers = {
   Query: {
     info: () => "This is a GraphQL wrapper for the student portal API",
 
-    today: () => fetch("https://student.sbhs.net.au/api/calendar/days.json")
-      .then(res => res.json())
+    today: () => fetch_api("calendar/days.json")
       .then(data => data[Object.keys(data)[0]]),
 
-    day: (parent, args) => fetch("https://student.sbhs.net.au/api/calendar/days.json?from=" + args.date)
-      .then(res => res.json())
+    day: (parent, args) => fetch_api("calendar/days.json", {"from": args.date})
       .then(data => data[Object.keys(data)[0]]),
 
-    terms: () => fetch("https://student.sbhs.net.au/api/calendar/terms.json")
-      .then(res => res.json())
+    terms: () => fetch_api("calendar/terms.json")
       .then(data => Object.values(data["terms"])),
 
-    publicHolidays: () => fetch("https://student.sbhs.net.au/api/calendar/terms.json")
-      .then(res => res.json())
+    publicHolidays: () => fetch_api("calendar/terms.json")
       .then(data => Object.entries(data['publicHolidays'])),
 
-    developmentDays: () => fetch("https://student.sbhs.net.au/api/calendar/terms.json")
-      .then(res => res.json())
+    developmentDays: () => fetch_api("calendar/terms.json")
       .then(data => Object.entries(data["developmentDays"])),
 
-    bellsToday: () => fetch("https://student.sbhs.net.au/api/timetable/bells.json")
-      .then(res => res.json()),
+    bellsToday: () => fetch_api("timetable/bells.json"),
 
-    bells: (parent, args) => fetch("https://student.sbhs.net.au/api/timetable/bells.json?date=" + args.date)
-      .then(res => res.json()),
+    bells: (parent, args) => fetch_api("timetable/bells.json", { date: args.date }),
   },
   DayOff: {
     date: parent => parent[0],
