@@ -1,11 +1,46 @@
-const { ApolloServer } = require('apollo-server-lambda')
+const { ApolloServer, AuthenticationError } = require('apollo-server-lambda')
 const path = require('path');
 const fs = require('fs');
 const fetch = require('node-fetch');
+const cookie = require('cookie')
 
-const fetch_api = (endpoint, parameters={}, event, authenticated=false) =>
-  fetch("https://student.sbhs.net.au/api/" + endpoint + "?" + new URLSearchParams(parameters))
-    .then(res => res.json())
+const fetch_api = (endpoint, parameters={}, event, authenticated=false) => {
+  if (!authenticated) {
+    return fetch('https://student.sbhs.net.au/api/' + endpoint + '?' + new URLSearchParams(parameters)).then(res => res.json())
+  } else {
+
+    if (!event.headers.cookie) {
+      throw new AuthenticationError("The cookies are missing")
+    }
+    let cookies;
+
+    try {
+      cookies = cookie.parse(event.headers.cookie)
+    } catch {
+      throw new AuthenticationError("The cookies are invalid")
+    }
+
+    if (cookies["access_token"]) {
+      return fetch('https://student.sbhs.net.au/api/' + endpoint + '?' + new URLSearchParams(parameters) +
+        (authenticated ? '&access_token=' + cookie.parse(event.headers.cookie)['access_token'] : ''),
+      )
+        .then((res) => {
+          if (!res.ok) {
+            if (res.status === 401) {
+              throw new AuthenticationError('Refresh the access token.');
+            }
+            throw new Error(`${(res.status)}`);
+          }
+          return res
+        })
+        .then(res => res.json())
+    } else if (cookies['refresh_token'] && cookies['code_verifier']) {
+      throw new AuthenticationError("Refresh the access token.")
+    } else {
+      throw new AuthenticationError("No access token or refresh token")
+    }
+  }
+}
 
 const resolvers = {
   Query: {
@@ -29,10 +64,25 @@ const resolvers = {
     bellsToday: () => fetch_api("timetable/bells.json"),
 
     bells: (parent, args) => fetch_api("timetable/bells.json", { date: args.date }),
+
+    user: (parent, args, { event }) => fetch_api('details/userinfo.json', {}, event, true),
+
+    loggedIn: (parent, args, {event}) => {
+      try {
+        let cookies = cookie.parse(event.headers.cookie);
+        return !!(cookies["access_token"] || cookies["refresh_token"] && cookies["code_verifier"]); // !! is the simplest way to cast to a boolean in js
+      } catch {
+        return false
+      }
+    }
   },
   DayOff: {
     date: parent => parent[0],
     name: parent => parent[1]
+  },
+
+  User: {
+    participation: (parent, args, { event }) => fetch_api("details/participation.json", {}, event, true)
   }
 }
 
@@ -42,6 +92,7 @@ const server = new ApolloServer({
     'utf8'
   ),
   resolvers,
+  context: event => event
 })
 
 const runHandler = (event, context, handler) =>
@@ -53,5 +104,6 @@ const runHandler = (event, context, handler) =>
 const handler = server.createHandler()
 
 module.exports.handler = async (event, context) => {
+  process.env.NODE_ENV = "development"
   return await runHandler(event, context, handler)
 }

@@ -39,13 +39,15 @@ const post = async (event) => {
           httpOnly: true,
           path: "/",
           sameSite: 'lax',
-          secure: true
+          secure: true,
+          maxAge: 60*60
         }),
         cookie.serialize("code_verifier", JSON.parse(event.body)["verifier"], {
           httpOnly: true,
           path: "/",
           sameSite: 'lax',
-          secure: true
+          secure: true,
+          maxAge: 90*24*60*60
         }),
         cookie.serialize("refresh_token", json["refresh_token"], {
           httpOnly: true,

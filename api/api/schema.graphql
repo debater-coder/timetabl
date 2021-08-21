@@ -7,6 +7,34 @@ type Query {
     developmentDays: [DayOff!]!
     bellsToday: BellsMeta
     bells(date: String!): BellsMeta
+    user: User!
+    loggedIn: Boolean!
+}
+
+type User {
+    username: String!
+    studentId: Int!
+    givenName: String!
+    surname: String!
+    rollClass: String!
+    yearGroup: Int!
+    role: String
+    department: String
+    office: String
+    email: String!
+    emailAliases: [String!]!
+    decEmail: String!
+    groups: [String!]
+    participation: [Activity]!
+}
+
+type Activity {
+    year: Int!
+    activity: String!
+    category: Int!
+    categoryName: String!
+    points: Int!
+    pointsCap: Int!
 }
 
 type BellsMeta {
