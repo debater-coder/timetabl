@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
-export default (config, store= localStorage) => {
-  const [loggedIn, setLoggedIn] = useState(false)
-  const [authState, setAuthState] = useState(false)
+export default (config, store = localStorage) => {
+  const [loggedIn, setLoggedIn] = useState(false);
+  const [authState, setAuthState] = useState(false);
   const [isRefreshing, setIsRefreshing] = useState(false);
-  
+
   /////////////////////////////////////////////////////////////////////
   // PKCE HELPER FUNCTIONS
   ////////////////////////////////////////////////////////////////////
@@ -13,29 +13,33 @@ export default (config, store= localStorage) => {
   const generateRandomString = () => {
     let array = new Uint32Array(28);
     window.crypto.getRandomValues(array);
-    return Array.from(array, dec => ('0' + dec.toString(16)).substr(-2)).join('');
+    return Array.from(array, (dec) => ('0' + dec.toString(16)).substr(-2)).join(
+      '',
+    );
   };
 
   // Calculate the SHA256 hash of the input text.
   // Returns a promise that resolves to an ArrayBuffer
-  const sha256 = plain => {
+  const sha256 = (plain) => {
     const encoder = new TextEncoder();
     const data = encoder.encode(plain);
     return window.crypto.subtle.digest('SHA-256', data);
   };
 
   // Base64-urlencodes the input string
-  const base64urlencode = str => {
+  const base64urlencode = (str) => {
     // Convert the ArrayBuffer to string using Uint8 array to conver to what btoa accepts.
     // btoa accepts chars only within ascii 0-255 and base64 encodes them.
     // Then convert the base64 encoded to base64url encoded
     //   (replace + with -, replace / with _, trim trailing =)
     return btoa(String.fromCharCode.apply(null, new Uint8Array(str)))
-      .replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+      .replace(/\+/g, '-')
+      .replace(/\//g, '_')
+      .replace(/=+$/, '');
   };
 
   // Return the base64-urlencoded sha256 hash for the PKCE challenge
-  const pkceChallengeFromVerifier = async v => {
+  const pkceChallengeFromVerifier = async (v) => {
     let hashed = await sha256(v);
     return base64urlencode(hashed);
   };
@@ -48,84 +52,94 @@ export default (config, store= localStorage) => {
   const login = async () => {
     // Create and store a random "state" value
     let state = generateRandomString();
-    store.setItem("pkce_state", state);
+    store.setItem('pkce_state', state);
 
     // Create and store a new PKCE code_verifier (the plaintext random secret)
     let code_verifier = generateRandomString();
-    store.setItem("pkce_code_verifier", code_verifier);
+    store.setItem('pkce_code_verifier', code_verifier);
 
     // Hash and base64-urlencode the secret to use as the challenge
     let code_challenge = await pkceChallengeFromVerifier(code_verifier);
 
     // Build the authorization URL
     // Redirect to the authorization server
-    window.location = config.authorization_endpoint
-      + "?response_type=code"
-      + "&client_id=" + encodeURIComponent(config.client_id)
-      + "&state=" + encodeURIComponent(state)
-      + "&scope=" + encodeURIComponent(config.scopes)
-      + "&redirect_uri=" + encodeURIComponent(config.redirect_uri)
-      + "&code_challenge=" + encodeURIComponent(code_challenge)
-      + "&code_challenge_method=S256";
-  }
+    window.location =
+      config.authorization_endpoint +
+      '?response_type=code' +
+      '&client_id=' +
+      encodeURIComponent(config.client_id) +
+      '&state=' +
+      encodeURIComponent(state) +
+      '&scope=' +
+      encodeURIComponent(config.scopes) +
+      '&redirect_uri=' +
+      encodeURIComponent(config.redirect_uri) +
+      '&code_challenge=' +
+      encodeURIComponent(code_challenge) +
+      '&code_challenge_method=S256';
+  };
 
   // Logout Function
   const logout = () => {
-    store.removeItem("access_token")
-    store.removeItem("refresh_token")
-    setLoggedIn(false)
-  }
+    store.removeItem('access_token');
+    store.removeItem('refresh_token');
+    setLoggedIn(false);
+  };
 
   const refresh = () => {
-    return new Promise(((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       console.log(isRefreshing);
       setIsRefreshing(true);
-      resolve(fetch(config.token_endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-        },
-        body: new URLSearchParams({
-          'grant_type': 'refresh_token',
-          'client_id': config.client_id,
-          'refresh_token': store.getItem('refresh_token'),
-          'code_verifier': store.getItem('pkce_code_verifier'),
+      resolve(
+        fetch(config.token_endpoint, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          },
+          body: new URLSearchParams({
+            grant_type: 'refresh_token',
+            client_id: config.client_id,
+            refresh_token: store.getItem('refresh_token'),
+            code_verifier: store.getItem('pkce_code_verifier'),
+          }),
         }),
-      }));
-    }))
-      .then(response => response.json())
-      .then(data => {
+      );
+    })
+      .then((response) => response.json())
+      .then((data) => {
         if ('access_token' in data) {
           store.setItem('access_token', data['access_token']);
         }
       });
-  }
+  };
 
   // API request function
   const apiRequest = async (endpoint, try_again = true) => {
-    let response = await fetch(config.api_endpoint + "/" + endpoint, {
-      method: "POST",
-      body: "access_token=" + store.getItem("access_token"),
+    let response = await fetch(config.api_endpoint + '/' + endpoint, {
+      method: 'POST',
+      body: 'access_token=' + store.getItem('access_token'),
       headers: {
-        "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8"
-      }
-    })
+        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+      },
+    });
     if (!response.ok) {
       if (response.status === 401 && try_again && !isRefreshing) {
-        await refresh()
-        return apiRequest(endpoint, false)
+        await refresh();
+        return apiRequest(endpoint, false);
       } else throw new Error('Status ' + response.status);
     } else {
-      let data = await response.text()
-      return data ? JSON.parse(data) : {}
+      let data = await response.text();
+      return data ? JSON.parse(data) : {};
     }
-  }
+  };
 
   /////////////////////////////////////////////////////////////////
   // OAUTH REDIRECT HANDLING
   /////////////////////////////////////////////////////////////////
   useEffect(() => {
-    let query = Object.fromEntries(new URLSearchParams(window.location.search).entries());
+    let query = Object.fromEntries(
+      new URLSearchParams(window.location.search).entries(),
+    );
     window.history.replaceState({}, null, '/');
 
     if (query.error) {
@@ -134,33 +148,28 @@ export default (config, store= localStorage) => {
 
     // If the server returned an authorization code, attempt to exchange it for an access token
     if (query.code) {
-
       // Verify state matches what we set at the beginning
       if (store.getItem('pkce_state') !== query.state) {
         alert('Invalid state');
       } else {
-        fetch(config.token_endpoint, {
+        fetch(config.auth_endpoint, {
           method: 'POST',
           headers: {
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'Content-Type': 'application/json; charset=UTF-8',
           },
-          body: new URLSearchParams({
-            grant_type: 'authorization_code',
+          body: JSON.stringify({
             code: query.code,
-            client_id: config.client_id,
-            redirect_uri: config.redirect_uri,
-            code_verifier: store.getItem('pkce_code_verifier'),
+            verifier: store.getItem('pkce_code_verifier'),
           }),
-        }).then(response => {
-          if (!response.ok) {
-            throw new Error(`Status ${response.status}`);
-          }
-          return response;
         })
-          .then(response => response.json())
-          .then(body => {
-            store.setItem('access_token', body['access_token']);
-            store.setItem('refresh_token', body['refresh_token']);
+          .then((response) => {
+            if (!response.ok) {
+              throw new Error(`Status ${response.status}`);
+            }
+            return response;
+          })
+          .then((response) => response.json())
+          .then(() => {
             setLoggedIn(true);
             setAuthState(true);
           });
@@ -168,13 +177,16 @@ export default (config, store= localStorage) => {
 
       // Clean these up since we don't need them anymore
       store.removeItem('pkce_state');
-      // store.removeItem('pkce_code_verifier');
-    } else if (store.getItem('access_token') && store.getItem('refresh_token')) {
+      store.removeItem('pkce_code_verifier');
+    } else if (
+      store.getItem('access_token') &&
+      store.getItem('refresh_token')
+    ) {
       setLoggedIn(true);
       setAuthState(true);
     } else {
       setAuthState(true);
     }
-  }, [])
-  return {loggedIn, login, authState, logout, apiRequest}
-}
+  }, []);
+  return { loggedIn, login, authState, logout, apiRequest };
+};

@@ -1,0 +1,68 @@
+type Query {
+    info: String!
+    today: Day!
+    day(date: String!): Day!
+    terms: [Term!]!
+    publicHolidays: [DayOff!]!
+    developmentDays: [DayOff!]!
+    bellsToday: BellsMeta
+    bells(date: String!): BellsMeta
+    user: User!
+    loggedIn: Boolean!
+}
+
+type User {
+    username: String!
+    studentId: Int!
+    givenName: String!
+    surname: String!
+    rollClass: String!
+    yearGroup: Int!
+    role: String
+    department: String
+    office: String
+    email: String!
+    emailAliases: [String!]!
+    decEmail: String!
+    groups: [String!]
+    participation: [Activity]!
+}
+
+type Activity {
+    year: Int!
+    activity: String!
+    category: Int!
+    categoryName: String!
+    points: Int!
+    pointsCap: Int!
+}
+
+type BellsMeta {
+    bellsAltered: Boolean
+    bellsAlteredReason: String
+    serverTimezone: Int
+    bells: [Bell!]
+}
+
+type Bell {
+    bell: String!
+    time: String!
+}
+
+type DayOff {
+    date: String!
+    name: String!
+}
+
+type Day {
+    date: String!
+    term: Int!
+    week: Int!
+    weekType: String!
+    dayNumber: Int!
+}
+
+type Term {
+    start: Day!
+    end: Day!
+}
