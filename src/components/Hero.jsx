@@ -11,6 +11,7 @@ import {
 export default props => {
 
   const textColor = useColorModeValue("primary.800", "primary.100")
+  const secondaryTextColor = useColorModeValue("secondary.800", "secondary.100")
 
   return <Flex
     align='center'
@@ -32,6 +33,8 @@ export default props => {
         fontWeight='bold'
         color={textColor}
         textAlign={['center', 'center', 'left', 'left']}
+        bgGradient={`linear(to-r, ${textColor}, ${secondaryTextColor})`}
+        bgClip="text"
       >
         Organise your school life
       </Heading>
