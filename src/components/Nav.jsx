@@ -1,4 +1,4 @@
-import { Flex, IconButton, Text, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { Flex, IconButton, Text, useColorMode, useColorModeValue, Tooltip } from '@chakra-ui/react';
 import { FaGithub, FaMoon, FaSun } from 'react-icons/all';
 import React from 'react';
 
