@@ -4,7 +4,7 @@ export default {
     public: { url: '/', static: true },
     src: { url: '/dist' },
   },
-  plugins: ['@snowpack/plugin-react-refresh', '@snowpack/plugin-dotenv', ["@snowpack/plugin-webpack"]],
+  plugins: ['@snowpack/plugin-react-refresh', '@snowpack/plugin-dotenv'],
   routes: [
     /* Enable an SPA Fallback in development: */
     // {"match": "routes", "src": ".*", "dest": "/index.html"},
