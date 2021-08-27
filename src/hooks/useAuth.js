@@ -81,56 +81,17 @@ export default (config, store = localStorage) => {
 
   // Logout Function
   const logout = () => {
-    store.removeItem('access_token');
-    store.removeItem('refresh_token');
     setLoggedIn(false);
+    // TODO: remove cookie
   };
 
   const refresh = () => {
-    return new Promise((resolve, reject) => {
-      console.log(isRefreshing);
-      setIsRefreshing(true);
-      resolve(
-        fetch(config.token_endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-          },
-          body: new URLSearchParams({
-            grant_type: 'refresh_token',
-            client_id: config.client_id,
-            refresh_token: store.getItem('refresh_token'),
-            code_verifier: store.getItem('pkce_code_verifier'),
-          }),
-        }),
-      );
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        if ('access_token' in data) {
-          store.setItem('access_token', data['access_token']);
-        }
-      });
+    // TODO: Implement refresh
   };
 
   // API request function
   const apiRequest = async (endpoint, try_again = true) => {
-    let response = await fetch(config.api_endpoint + '/' + endpoint, {
-      method: 'POST',
-      body: 'access_token=' + store.getItem('access_token'),
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
-      },
-    });
-    if (!response.ok) {
-      if (response.status === 401 && try_again && !isRefreshing) {
-        await refresh();
-        return apiRequest(endpoint, false);
-      } else throw new Error('Status ' + response.status);
-    } else {
-      let data = await response.text();
-      return data ? JSON.parse(data) : {};
-    }
+    // TODO: Implement api request
   };
 
   /////////////////////////////////////////////////////////////////
@@ -150,7 +111,7 @@ export default (config, store = localStorage) => {
     if (query.code) {
       // Verify state matches what we set at the beginning
       if (store.getItem('pkce_state') !== query.state) {
-        alert('Invalid state');
+        console.error('Invalid state');
       } else {
         fetch(config.auth_endpoint, {
           method: 'POST',
@@ -178,12 +139,6 @@ export default (config, store = localStorage) => {
       // Clean these up since we don't need them anymore
       store.removeItem('pkce_state');
       store.removeItem('pkce_code_verifier');
-    } else if (
-      store.getItem('access_token') &&
-      store.getItem('refresh_token')
-    ) {
-      setLoggedIn(true);
-      setAuthState(true);
     } else {
       setAuthState(true);
     }

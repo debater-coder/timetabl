@@ -9,9 +9,8 @@ import {
 } from '@chakra-ui/react';
 
 export default props => {
-
   const textColor = useColorModeValue("primary.800", "primary.100")
-  const secondaryTextColor = useColorModeValue("secondary.800", "secondary.100")
+  const secondaryTextColor = useColorModeValue("secondary.500", "secondary.100")
 
   return <Flex
     align='center'
@@ -56,6 +55,7 @@ export default props => {
         px='4'
         lineHeight='1'
         size='md'
+        onClick={props.onCTAClick}
       >
         Log in with SBHS
       </Button>
