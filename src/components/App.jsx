@@ -1,45 +1,18 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import './App.css';
-import useAuth from '../auth/useAuth';
-import config from '../config';
+import Landing from './Landing';
+import { AuthContext } from './AuthContext';
+import Private from './Private';
+import { Fade, Flex, Spinner } from '@chakra-ui/react';
 
 let App = () => {
-  let { loggedIn, authState, login, logout, apiRequest } = useAuth(config);
-  let [name, setName] = useState('');
-  let [points, setPoints] = useState(-1);
+  const { loggedIn, login, isLoading } = useContext(AuthContext)
+  return isLoading
+    ?
+    <Flex alignItems='center' justifyContent='center' height="100vh"><Fade out={isLoading}><Spinner size="xl"/></Fade></Flex> // True
+    :
+    (loggedIn ? <Private /> : <Landing onCTAClick={login} />) // False
 
-  useEffect(() => {
-    if (loggedIn) {
-      // On login
-      apiRequest('details/userinfo.json').then((data) =>
-        setName(data['givenName'] + ' ' + data['surname']),
-      );
-      apiRequest('details/participation.json').then((data) =>
-        setPoints(data.slice(-1)[0]['points']),
-      );
-    } else {
-      // On logout
-      setPoints(-1);
-      setName('');
-    }
-  }, [loggedIn]);
-
-  return (
-    <div className="App">
-      {authState ? (
-        loggedIn ? (
-          <button onClick={logout}>Log out</button>
-        ) : (
-          <button onClick={login}>Log in</button>
-        )
-      ) : (
-        <p>Loading...</p>
-      )}
-
-      {name !== '' ? <p>Hello, {name}!</p> : ''}
-      {points !== -1 ? <p>You have {points} award scheme points!</p> : ''}
-    </div>
-  );
 };
 
 export default App;

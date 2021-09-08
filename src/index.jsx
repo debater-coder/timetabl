@@ -2,10 +2,25 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App.jsx';
 import './index.css';
+import { ChakraProvider } from "@chakra-ui/react"
+import theme from "./theme"
+import { createClient, Provider} from 'urql';
+import config from './config';
+import { AuthProvider } from './components/AuthContext';
+
+const client = createClient({
+  url: config.api_endpoint,
+});
 
 ReactDOM.render(
   <React.StrictMode>
-    <App />
+      <ChakraProvider theme={theme}>
+        <Provider value={client}>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </Provider>
+      </ChakraProvider>
   </React.StrictMode>,
   document.getElementById('root'),
 );
