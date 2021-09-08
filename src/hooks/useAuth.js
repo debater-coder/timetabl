@@ -2,8 +2,7 @@ import { useEffect, useState } from 'react';
 
 export default (config, store = localStorage) => {
   const [loggedIn, setLoggedIn] = useState(false);
-  const [authState, setAuthState] = useState(false);
-  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   /////////////////////////////////////////////////////////////////////
   // PKCE HELPER FUNCTIONS
@@ -82,7 +81,10 @@ export default (config, store = localStorage) => {
   // Logout Function
   const logout = () => {
     setLoggedIn(false);
-    // TODO: remove cookie
+    store.removeItem("loggedIn")
+    let _ = fetch(config.auth_endpoint, {
+      method: "DELETE"
+    });
   };
 
   const refresh = () => {
@@ -90,7 +92,7 @@ export default (config, store = localStorage) => {
   };
 
   // API request function
-  const apiRequest = async (endpoint, try_again = true) => {
+  const apiRequest = async (endpoint) => {
     // TODO: Implement api request
   };
 
@@ -98,6 +100,7 @@ export default (config, store = localStorage) => {
   // OAUTH REDIRECT HANDLING
   /////////////////////////////////////////////////////////////////
   useEffect(() => {
+
     let query = Object.fromEntries(
       new URLSearchParams(window.location.search).entries(),
     );
@@ -129,19 +132,23 @@ export default (config, store = localStorage) => {
             }
             return response;
           })
-          .then((response) => response.json())
           .then(() => {
+            store.setItem("loggedIn", "true")
             setLoggedIn(true);
-            setAuthState(true);
+            setIsLoading(false);
           });
       }
 
       // Clean these up since we don't need them anymore
       store.removeItem('pkce_state');
       store.removeItem('pkce_code_verifier');
+    } else if (store.getItem("loggedIn")) {
+      setLoggedIn(true)
+      setIsLoading(false)
     } else {
-      setAuthState(true);
+      setLoggedIn(false)
+      setIsLoading(false);
     }
   }, []);
-  return { loggedIn, login, authState, logout, apiRequest };
+  return { loggedIn, login, isLoading, logout, apiRequest };
 };

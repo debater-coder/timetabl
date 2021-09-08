@@ -2,8 +2,8 @@ const fetch = require('node-fetch');
 const cookie = require('cookie')
 
 const config = {
-  client_id: 'timetabldev',
-  redirect_uri: 'http://localhost:8888/',
+  client_id: 'timetabl',
+  redirect_uri: 'https://sbhs-timetabl.netlify.app/',
   authorization_endpoint: 'https://student.sbhs.net.au/api/authorize',
   token_endpoint: 'https://student.sbhs.net.au/api/token',
   api_endpoint: 'https://student.sbhs.net.au/api',
@@ -61,11 +61,42 @@ const post = async (event) => {
   }
 }
 
+const logout = async () => ({
+  statusCode: 200,
+  multiValueHeaders: {
+    "Set-Cookie": [
+      cookie.serialize("access_token", "", {
+        httpOnly: true,
+        path: "/",
+        sameSite: 'lax',
+        secure: true,
+        maxAge: 0
+      }),
+      cookie.serialize("code_verifier", "", {
+        httpOnly: true,
+        path: "/",
+        sameSite: 'lax',
+        secure: true,
+        maxAge: 0
+      }),
+      cookie.serialize("refresh_token", "", {
+        httpOnly: true,
+        path: "/",
+        sameSite: 'lax',
+        secure: true,
+        maxAge: 0
+      })
+    ]
+  }
+})
+
 exports.handler = async (event) => {
   try {
 
     if (event["httpMethod"] === "POST") {
       return await post(event)
+    } else if (event["httpMethod"] === "DELETE") {
+      return await logout()
     }
 
   } catch (error) {

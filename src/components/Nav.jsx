@@ -17,8 +17,8 @@ export default () => {
     h='70%'
     mb={8}
     p={8}
-    bg={['primary.500', 'primary.500', 'transparent', 'transparent']}
-    color={['white', 'white', textColor, textColor]}
+    bg={'transparent'}
+    color={textColor}
   >
     <Text fontWeight='medium'>Timetabl</Text>
     <Flex>
