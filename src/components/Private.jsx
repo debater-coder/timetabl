@@ -1,9 +1,7 @@
-import React, { useContext } from 'react';
-import { Button, Flex, useBreakpointValue } from '@chakra-ui/react';
-import useAuth from '../hooks/useAuth';
-import { AuthContext } from './AuthContext';
+import React from 'react';
+import { useBreakpointValue } from '@chakra-ui/react';
 
 export default () => {
-  const {logout} = useContext(AuthContext)
-  return <Button onClick={logout}>Log out</Button>
+  const screenSize = useBreakpointValue({base: "base", md: "md", lg: "lg", xl: "xl"})
+  return screenSize
 }
