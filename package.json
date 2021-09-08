@@ -1,4 +1,6 @@
 {
+  "name": "timetabl",
+  "repository": "github:debater/coder",
   "scripts": {
     "start": "snowpack dev --port 8080",
     "build": "snowpack build",
@@ -7,23 +9,29 @@
     "lint": "prettier --check \"src/**/*.{js,jsx}\""
   },
   "dependencies": {
-    "apollo-server": "^3.1.2",
-    "apollo-server-lambda": "^2.25.2",
-    "cookie": "^0.4.1",
-    "graphql": "^15.5.1",
-    "node-fetch": "^2.6.1",
-    "react": "^17.0.2",
-    "react-dom": "^17.0.2",
-    "snowpack": "^3.3.7"
-  },
-  "devDependencies": {
+    "@chakra-ui/icons": "^1.0.15",
+    "@chakra-ui/react": "^1.6.6",
+    "@emotion/react": "^11.4.1",
+    "@emotion/styled": "^11.3.0",
     "@snowpack/plugin-build-script": "^2.1.0",
     "@snowpack/plugin-dotenv": "^2.1.0",
     "@snowpack/plugin-react-refresh": "^2.5.0",
     "@snowpack/web-test-runner-plugin": "^0.2.2",
+    "apollo-server": "^3.1.2",
+    "apollo-server-lambda": "^2.25.2",
+    "cookie": "^0.4.1",
+    "framer-motion": "^4.1.17",
+    "graphql": "^15.5.1",
+    "luxon": "^2.0.2",
+    "node-fetch": "^2.6.1",
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "react-icons": "^4.2.0",
+    "snowpack": "^3.3.7",
+    "urql": "^2.0.4"
+  },
+  "devDependencies": {
     "@testing-library/react": "^11.2.6",
-    "@web/test-runner": "^0.13.3",
-    "chai": "^4.3.4",
-    "netlify-cli": "^6.6.1"
+    "@web/test-runner": "^0.13.3"
   }
 }
