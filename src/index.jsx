@@ -10,6 +10,9 @@ import { AuthProvider } from './components/AuthContext';
 
 const client = createClient({
   url: config.api_endpoint,
+  fetchOptions: () => ({
+    credentials: "same-origin"
+  })
 });
 
 ReactDOM.render(
