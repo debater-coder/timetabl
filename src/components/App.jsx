@@ -1,8 +1,8 @@
 import React, { useContext } from 'react';
 import './App.css';
-import Landing from './Landing';
+import Landing from './Landing/Landing';
 import { AuthContext } from './AuthContext';
-import Private from './Private';
+import Private from './Main/Main';
 import { Fade, Flex, Spinner } from '@chakra-ui/react';
 
 let App = () => {
