@@ -26,12 +26,13 @@ type User {
     decEmail: String!
     groups: [String!]
     participation: [Activity]!
+    totalPoints: Int!
 }
 
 type Activity {
     year: Int!
     activity: String!
-    category: Int!
+    category: String!
     categoryName: String!
     points: Int!
     pointsCap: Int!

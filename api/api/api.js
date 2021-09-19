@@ -82,7 +82,10 @@ const resolvers = {
   },
 
   User: {
-    participation: (parent, args, { event }) => fetch_api("details/participation.json", {}, event, true)
+    participation: (parent, args, { event }) => fetch_api("details/participation.json", {}, event, true),
+    totalPoints: (parent, args, { event }) => fetch_api("details/participation.json", {}, event, true).then(
+      data => data.pop()["points"]
+    )
   }
 }
 
