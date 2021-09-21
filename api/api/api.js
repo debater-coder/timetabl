@@ -42,6 +42,7 @@ const fetch_api = (endpoint, parameters={}, event, authenticated=false) => {
   }
 }
 
+// noinspection EqualityComparisonWithCoercionJS
 const resolvers = {
   Query: {
     info: () => "This is a GraphQL wrapper for the student portal API",
@@ -86,6 +87,12 @@ const resolvers = {
     totalPoints: (parent, args, { event }) => fetch_api("details/participation.json", {}, event, true).then(
       data => data.pop()["points"]
     )
+  },
+  Day: {
+    term: ({ term: value }) => value != 0 && value != "" ? value : null, // Double equals used to not compare type
+    week: ({ week: value }) => value != 0 && value != "" ? value : null,
+    weekType: ({ weekType: value }) => value != 0 && value != "" ? value : null,
+    dayNumber: ({ dayNumber: value }) => value != 0 && value != "" ? value : null,
   }
 }
 

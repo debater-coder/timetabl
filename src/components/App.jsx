@@ -4,14 +4,11 @@ import Landing from './Landing/Landing';
 import { AuthContext } from './AuthContext';
 import Private from './Main/Main';
 import { Fade, Flex, Spinner } from '@chakra-ui/react';
+import FullScreenLoading from './FullScreenLoading';
 
 let App = () => {
   const { loggedIn, login, isLoading } = useContext(AuthContext)
-  return isLoading
-    ?
-    <Flex alignItems='center' justifyContent='center' height="100vh"><Fade out={isLoading}><Spinner size="xl"/></Fade></Flex> // True
-    :
-    (loggedIn ? <Private /> : <Landing onCTAClick={login} />) // False
+  return <FullScreenLoading isLoading={isLoading}>{loggedIn ? <Private /> : <Landing onCTAClick={login} />}</FullScreenLoading>
 
 };
 

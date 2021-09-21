@@ -12,7 +12,8 @@ const client = createClient({
   url: config.api_endpoint,
   fetchOptions: () => ({
     credentials: "same-origin"
-  })
+  }),
+  requestPolicy: "cache-and-network"
 });
 
 ReactDOM.render(
