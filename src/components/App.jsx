@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import './App.css';
 import Landing from './Landing/Landing';
 import { AuthContext } from './AuthContext';
 import Private from './Main/Main';
