@@ -1,8 +1,8 @@
 export default {
-  client_id: 'timetabldev',
-  redirect_uri: 'http://localhost:8888/',
+  client_id: 'timetabl',
+  redirect_uri: 'https://sbhs-timetabl.netlify.app/',
   authorization_endpoint: 'https://student.sbhs.net.au/api/authorize',
-  auth_endpoint: 'http://localhost:8888/.netlify/functions/auth',
-  api_endpoint: 'http://localhost:8888/.netlify/functions/api',
+  auth_endpoint: 'https://sbhs-timetabl.netlify.app/.netlify/functions/auth',
+  api_endpoint: 'https://sbhs-timetabl.netlify.app/.netlify/functions/api',
   scopes: 'all-ro',
 };
