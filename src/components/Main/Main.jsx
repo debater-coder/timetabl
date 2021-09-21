@@ -1,49 +1,56 @@
-import React, { useContext, useState } from 'react';
-import { Button, Flex, Link, Text } from '@chakra-ui/react';
+import React, { useContext } from 'react';
+import { Box, Button, Center, Flex, HStack, Link, Square, Text, VStack } from '@chakra-ui/react';
 import { AuthContext } from '../AuthContext';
 import { useQuery } from 'urql';
-import { SingleDatepicker } from 'chakra-dayzed-datepicker';
+import FullScreenLoading from '../FullScreenLoading';
 
 export default () => {
   const {logout} = useContext(AuthContext)
-  const [date, setDate] = useState(new Date())
-  const [result, reexecuteQuery] = useQuery({
-    query: `
-        query {
-            user {
-                givenName
-                studentId
-                rollClass
-                email
-                totalPoints
-            }
-            bells(date: "2021-08-30") {
-                serverTimezone
-            }
-        }
-    `
+
+  // language=GraphQL
+  let query = `
+      query {
+          user {
+              givenName
+              studentId
+              rollClass
+              email
+              totalPoints
+          }
+          today {
+              weekType
+              week
+          }
+      }
+  `;
+  const [result] = useQuery({
+    query
   })
 
   const { data, fetching, error } = result
 
-  if (fetching) console.log("Loading")
-  else if (error) console.error(error)
+  if (error) console.error(error)
+
+  if (fetching || error) return <FullScreenLoading/>
+
+  const {
+    user: { totalPoints, givenName, rollClass, email, studentId } ,
+    today: {
+      weekType,
+      week
+    }
+  } = data;
 
   return <Flex width="100vw" height="100vh" direction="column" textAlign="center" align="center" justify="space-around">
     <Button onClick={logout}>Logout</Button>
     {fetching || error ? "" :
       <>
         <div>
-          <Text>Hello {data.user.givenName}.</Text>
-          <Text>Your student id is {data.user.studentId}</Text>
-          <Text>You are in class {data.user.rollClass}</Text>
-          <Text>Your email address is <Link color="secondary.300" href={"mailto:" + data.user.email}>{data.user.email}</Link></Text>
-          <Text>You have {data.user.totalPoints} award scheme points</Text>
-        </div>
-        <div>
-          <Text textAlign="left">See the bells for the date: ⚠ DOSEN'T ACTUALLY WORK ⚠</Text>
-          <SingleDatepicker onDateChange={setDate} date={date} />
-          <Button colorScheme="primary" mt={4} onClick={() => {setDate(new Date())}}>Reset to today</Button>
+          <Text>Hello, {givenName}.</Text>
+          <Text>Your student id is {studentId}</Text>
+          <Text>You are in class {rollClass}</Text>
+          <Text>Your email address is <Link color="secondary.300" href={"mailto:" + email}>{email}</Link></Text>
+          <Text>You have {totalPoints} award scheme point{totalPoints === 1 ? "" : "s"}</Text>
         </div>
       </>
     }

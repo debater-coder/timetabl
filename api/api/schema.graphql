@@ -57,10 +57,10 @@ type DayOff {
 
 type Day {
     date: String!
-    term: Int!
-    week: Int!
-    weekType: String!
-    dayNumber: Int!
+    term: Int
+    week: Int
+    weekType: String
+    dayNumber: Int
 }
 
 type Term {
