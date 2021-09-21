@@ -6,8 +6,8 @@ export default {
   },
   plugins: ['@snowpack/plugin-react-refresh', '@snowpack/plugin-dotenv',
     [
-      '@snowpack/plugin-webpack'
-    ]
+      '@snowpack/plugin-webpack',
+    ],
   ],
   routes: [
     /* Enable an SPA Fallback in development: */
@@ -20,8 +20,7 @@ export default {
   packageOptions: {
     /* ... */
   },
-  devOptions: {
-  },
+  devOptions: {},
   buildOptions: {
     /* ... */
   },

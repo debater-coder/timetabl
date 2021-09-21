@@ -1,12 +1,12 @@
-import { Flex, IconButton, Text, useColorMode, useColorModeValue, Tooltip } from '@chakra-ui/react';
+import { Flex, IconButton, Text, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import { FaGithub, FaMoon, FaSun } from 'react-icons/all';
 import React from 'react';
 
 export default () => {
-  const { toggleColorMode } = useColorMode()
-  const textColor = useColorModeValue("primary.700", "primary.200")
-  const iconColor = useColorModeValue("black", "white")
-  const icon = useColorModeValue(<FaMoon />, <FaSun />)
+  const { toggleColorMode } = useColorMode();
+  const textColor = useColorModeValue('primary.700', 'primary.200');
+  const iconColor = useColorModeValue('black', 'white');
+  const icon = useColorModeValue(<FaMoon />, <FaSun />);
 
   return <Flex
     as='nav'

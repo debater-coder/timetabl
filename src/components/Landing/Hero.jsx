@@ -1,16 +1,9 @@
-import React from "react";
-import {
-  Box,
-  Button,
-  Flex,
-  Heading,
-  Stack,
-  Text, useColorModeValue,
-} from '@chakra-ui/react';
+import React from 'react';
+import { Box, Button, Flex, Heading, Stack, Text, useColorModeValue } from '@chakra-ui/react';
 
 export default props => {
-  const textColor = useColorModeValue("primary.800", "primary.100")
-  const secondaryTextColor = useColorModeValue("secondary.500", "secondary.100")
+  const textColor = useColorModeValue('primary.800', 'primary.100');
+  const secondaryTextColor = useColorModeValue('secondary.500', 'secondary.100');
 
   return <Flex
     align='center'
@@ -33,7 +26,7 @@ export default props => {
         color={textColor}
         textAlign={['center', 'center', 'left', 'left']}
         bgGradient={`linear(to-r, ${textColor}, ${secondaryTextColor})`}
-        bgClip="text"
+        bgClip='text'
       >
         Organise your school life
       </Heading>

@@ -81,9 +81,9 @@ export default (config, store = localStorage) => {
   // Logout Function
   const logout = () => {
     setLoggedIn(false);
-    store.removeItem("loggedIn")
+    store.removeItem('loggedIn');
     let _ = fetch(config.auth_endpoint, {
-      method: "DELETE"
+      method: 'DELETE',
     });
   };
 
@@ -133,7 +133,7 @@ export default (config, store = localStorage) => {
             return response;
           })
           .then(() => {
-            store.setItem("loggedIn", "true")
+            store.setItem('loggedIn', 'true');
             setLoggedIn(true);
             setIsLoading(false);
           });
@@ -142,11 +142,11 @@ export default (config, store = localStorage) => {
       // Clean these up since we don't need them anymore
       store.removeItem('pkce_state');
       store.removeItem('pkce_code_verifier');
-    } else if (store.getItem("loggedIn")) {
-      setLoggedIn(true)
-      setIsLoading(false)
+    } else if (store.getItem('loggedIn')) {
+      setLoggedIn(true);
+      setIsLoading(false);
     } else {
-      setLoggedIn(false)
+      setLoggedIn(false);
       setIsLoading(false);
     }
   }, []);
