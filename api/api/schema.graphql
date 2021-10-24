@@ -1,32 +1,49 @@
 type Query {
     info: String!
-    today: Day!
-    day(date: String!): Day!
+    loggedIn: Boolean!
+    currentUser: User
+    bellsAltered: Boolean!
+    bellsAlteredReason: String
+    bells(date: String): [Bell!]
+    isSchoolDay(date: String): Boolean!
+    serverTimezone: Int
+    day(date: String): Day!
     terms: [Term!]!
     publicHolidays: [DayOff!]!
     developmentDays: [DayOff!]!
-    bellsToday: BellsMeta
-    bells(date: String!): BellsMeta
-    user: User!
-    loggedIn: Boolean!
+}
+
+type Bell {
+    bell: String!
+    time: String!
 }
 
 type User {
-    username: String!
-    studentId: Int!
+    # User details
     givenName: String!
     surname: String!
+    username: String!
+    studentId: String!
     rollClass: String!
     yearGroup: Int!
-    role: String
-    department: String
-    office: String
+    role: String!
+    department: String!
+    office: String!
     email: String!
-    emailAliases: [String!]!
+    emailAliases: [String]!
     decEmail: String!
-    groups: [String!]
-    participation: [Activity]!
+    groups: [String!]!
     totalPoints: Int!
+    activities: [Activity!]!
+
+    periods(date: String): [Period!]
+}
+
+type Period {
+    time: String!
+    name: String!
+    teacher: String
+    room: String
 }
 
 type Activity {
@@ -36,18 +53,6 @@ type Activity {
     categoryName: String!
     points: Int!
     pointsCap: Int!
-}
-
-type BellsMeta {
-    bellsAltered: Boolean
-    bellsAlteredReason: String
-    serverTimezone: Int
-    bells: [Bell!]
-}
-
-type Bell {
-    bell: String!
-    time: String!
 }
 
 type DayOff {
