@@ -10,6 +10,43 @@ const config = {
   scopes: 'all-ro',
 };
 
+const refresh = async (event) => {
+  let res = await fetch(config.token_endpoint, {
+    method: 'POST',
+    body: new URLSearchParams({
+        grant_type: 'refresh_token',
+        refresh_token: cookie.parse(event.headers['cookie'])['refresh_token'],
+        client_id: config.client_id,
+        code_verifier: cookie.parse(event.headers['cookie'])['code_verifier'],
+      },
+    ),
+    headers: {
+      'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+    },
+  });
+
+  if (!res.ok) {
+    return { statusCode: res.status, body: res.statusText };
+  }
+
+  let json = await res.json();
+
+  return {
+    statusCode: 200,
+    multiValueHeaders: {
+      'Set-Cookie': [
+        cookie.serialize('access_token', json['access_token'], {
+          httpOnly: true,
+          path: '/',
+          sameSite: 'lax',
+          secure: true,
+          maxAge: 60 * 60,
+        }),
+      ],
+    },
+  };
+};
+
 const post = async (event) => {
   let res = await fetch(config.token_endpoint, {
     method: 'POST',
@@ -92,11 +129,12 @@ const logout = async () => ({
 
 exports.handler = async (event) => {
   try {
-
     if (event['httpMethod'] === 'POST') {
       return await post(event);
     } else if (event['httpMethod'] === 'DELETE') {
       return await logout();
+    } else if (event['httpMethod'] === 'PATCH') {
+      return await refresh(event);
     }
 
   } catch (error) {
