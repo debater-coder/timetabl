@@ -1,8 +1,7 @@
 import Nav from './Nav';
 import Hero from './Hero';
-import { Flex, Text, useColorModeValue } from '@chakra-ui/react';
+import { Flex, useColorModeValue } from '@chakra-ui/react';
 import React from 'react';
-import { useQuery } from 'urql';
 
 const query = `
   query {
@@ -19,13 +18,6 @@ export default ({ onCTAClick }) => {
 
   const timetableColor = useColorModeValue('gray.100', 'gray.700');
 
-  const [result, reexecuteQuery] = useQuery({
-    query,
-  });
-
-  const { data, fetching, error } = result;
-  if (error) console.error(error);
-
   return <Flex direction='column' align='center' maxW={{ xl: '1200px' }} m='0 auto'>
     <Nav />
     <Hero onCTAClick={onCTAClick}>
@@ -37,10 +29,7 @@ export default ({ onCTAClick }) => {
         justifyContent='center'
         direction='column'
       >
-        {
-          fetching ? 'Loading...' : data.bells.bells.map(bell => <Text key={bell.bell + bell.time}
-                                                                       fontSize='lg'>{bell.bell}: {bell.time} </Text>)
-        }
+        BLA BLA BLA
       </Flex>
     </Hero>
   </Flex>;

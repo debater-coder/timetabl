@@ -89,6 +89,7 @@ export default (config, store = localStorage) => {
 
   const refresh = () => {
     // TODO: Implement refresh
+
   };
 
   // API request function
