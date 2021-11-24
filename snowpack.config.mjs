@@ -9,8 +9,7 @@ export default {
       '@snowpack/plugin-webpack',
     ],
   ],
-  routes: [
-  ],
+  routes: [],
   optimize: {
     /* Example: Bundle your final build: */
     // "bundle": true,
