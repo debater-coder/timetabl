@@ -1,54 +1,41 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../../AuthContext';
+import { Button, ButtonGroup, Flex, IconButton, useColorMode, useColorModeValue, useToken } from '@chakra-ui/react';
+import { Calendar, House, NewspaperClipping } from 'phosphor-react';
+import NavButton from './NavButton';
 import { Link, Route, Routes, useLocation } from 'react-router-dom';
-import { Button, Flex, HStack, Spacer } from '@chakra-ui/react';
-import Calendar from '../routes/Calendar';
-import News from '../routes/News';
-import Home from '../routes/Home';
-
+import { FaMoon, FaSun } from 'react-icons/all';
 export default () => {
   const { logout } = useContext(AuthContext);
-  const { pathname } = useLocation();
+  const { pathname } = useLocation()
+
+  const iconColor = useColorModeValue('black', 'white');
+  const icon = useColorModeValue(<FaMoon />, <FaSun />);
+  const { toggleColorMode } = useColorMode();
+
 
   return <Flex width='100vw' height='100vh' direction='column' textAlign='center' align='center'
                justify='space-between'>
-    <Button onClick={logout} mt={10}>Logout</Button>
-    <Routes>
-      <Route path='calendar' element={<Calendar />} />
-      <Route path='news' element={<News />} />
-      <Route path='/' element={<Home />} />
-    </Routes>
 
-    <Flex bgColor={"pink"} w="100%" pb={50} pt={25}>
-      <Spacer />
-      <Link to='/calendar'>
-        <Button
-          variant={pathname === '/calendar' ? 'solid' : 'ghost'}
-          colorScheme={pathname === '/calendar' ? 'secondary' : 'gray'}
-        >
-          Calendar
-        </Button>
-      </Link>
-      <Spacer/>
-      <Link to='/'>
-        <Button
-          variant={pathname === '/' ? 'solid' : 'ghost'}
-          colorScheme={pathname === '/' ? 'secondary' : 'gray'}
-        >
-          Home
-        </Button>
-      </Link>
+    <Flex w={"100vw"} justify={"space-around"} pb="10px">
+      <ButtonGroup isAttached mt={10} variant={"outline"}>
+        <Button onClick={logout} >Logout</Button>
+        <IconButton onClick={toggleColorMode} aria-label='Dark mode' color={iconColor} icon={icon} mr={1} />
+      </ButtonGroup>
+    </Flex>
 
-      <Spacer/>
-      <Link to='/news'>
-        <Button
-          variant={pathname === '/news' ? 'solid' : 'ghost'}
-          colorScheme={pathname === '/news' ? 'secondary' : 'gray'}
-        >
-          News
-        </Button>
-      </Link>
-      <Spacer />
+    <Flex w={"100vw"} h={"100%"}>
+      <Routes>
+        <Route path={"/"} element={"Home"} />
+        <Route path={"/calendar"} element={"Calendar"} />
+        <Route path={"/news"} element={"News"} />
+      </Routes>
+    </Flex>
+    
+    <Flex w="100%" h="80px" justify={"space-evenly"}>
+      <Link to={"/calendar"}><NavButton name={"Calendar"} active={pathname === "/calendar"} icon={Calendar}/></Link>
+      <Link to={"/"}><NavButton name={"Home"} active={pathname === "/"} icon={House} /></Link>
+      <Link to={"/news"}><NavButton name={"News"} icon={NewspaperClipping} active={pathname === "/news"} /></Link>
     </Flex>
   </Flex>;
 }
