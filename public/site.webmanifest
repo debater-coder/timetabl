@@ -1,0 +1,12 @@
+{
+    "name": "Timetabl",
+    "start_url": "/",
+    "display": "standalone",
+    "background_color": "#ffffff",
+    "description": "Timetabl is one place for your Sydney Boys High School homework, timetable, daily notices and more.",
+    "dir": "ltr",
+    "lang": "en",
+    "orientation": "any",
+    "scope": "/",
+    "theme_color": "#1565c0"
+}
