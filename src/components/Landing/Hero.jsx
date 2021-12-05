@@ -8,7 +8,7 @@ export default props => {
   return <Flex
     align='center'
     justify={{ base: 'center', md: 'space-around', xl: 'space-between' }}
-    direction={{ base: 'column-reverse', md: 'row' }}
+    direction={{ base: 'column', md: 'row' }}
     wrap='no-wrap'
     minH='70vh'
     px={8}
@@ -16,6 +16,7 @@ export default props => {
   >
     <Stack
       spacing={4}
+      mb={5}
       w={{ base: '80%', md: '40%' }}
       align={['center', 'center', 'flex-start', 'flex-start']}
     >
@@ -62,7 +63,7 @@ export default props => {
         Free and open source
       </Text>
     </Stack>
-    <Box w={{ base: '80%', sm: '60%', md: '50%' }} mb={{ base: 12, md: 0 }}>
+    <Box>
       {props.children}
     </Box>
   </Flex>;

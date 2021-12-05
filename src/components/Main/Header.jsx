@@ -17,19 +17,16 @@ export default () => {
   const { logout } = useContext(AuthContext);
   const { toggleColorMode } = useColorMode();
 
-  // Menu items:
-  // - Logout
-  // - Toggle Dark mode
-  // - Settings
 
-  return <Flex w={'100%'} justify={'right'} align={"center"} pt={"10px"}>
+  return <Flex w={'100%'} justify={'right'} align={"center"} pt={"10px"} pb={"10px"}>
     <Menu>
       <MenuButton ml={3} mr={10} title={"Menu"}><Avatar name={"Hamzah Ahmed"} bg={"primary.100"} size={"sm"} /></MenuButton>
       <MenuList>
-        <MenuItem>Logout</MenuItem>
+        <MenuItem onClick={logout}>Logout</MenuItem>
         <MenuItem onClick={toggleColorMode}>
           Toggle dark mode
         </MenuItem>
+        <MenuItem>Profile</MenuItem>
         <MenuItem>Settings</MenuItem>
       </MenuList>
     </Menu>

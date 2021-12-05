@@ -87,16 +87,6 @@ export default (config, store = localStorage) => {
     });
   };
 
-  const refresh = () => {
-    // TODO: Implement refresh
-
-  };
-
-  // API request function
-  const apiRequest = async (endpoint) => {
-    // TODO: Implement api request
-  };
-
   /////////////////////////////////////////////////////////////////
   // OAUTH REDIRECT HANDLING
   /////////////////////////////////////////////////////////////////
@@ -151,5 +141,5 @@ export default (config, store = localStorage) => {
       setIsLoading(false);
     }
   }, []);
-  return { loggedIn, login, isLoading, logout, apiRequest };
+  return { loggedIn, login, isLoading, logout };
 };

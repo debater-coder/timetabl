@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom';
 import NavButton from './layouts/NavButton';
-import { Calendar, House, NewspaperClipping } from 'phosphor-react';
+import { Calendar, House, Megaphone } from 'phosphor-react';
 import React from 'react';
 
 export default ({ pathname, sidebar }) => <>
@@ -11,6 +11,6 @@ export default ({ pathname, sidebar }) => <>
     <NavButton sidebar={sidebar} name={'Home'} active={pathname === '/'} icon={House} />
   </Link>
   <Link to={'/news'}>
-    <NavButton sidebar={sidebar} name={'News'} icon={NewspaperClipping} active={pathname === '/news'} />
+    <NavButton sidebar={sidebar} name={'Notices'} icon={Megaphone} active={pathname === '/news'} />
   </Link>
 </>
