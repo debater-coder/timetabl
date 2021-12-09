@@ -11,7 +11,7 @@ export default () => {
   return <Flex width='100vw' height='100vh' direction='column' textAlign='center' align='center'
                justify='space-between'>
     <Header />
-    <Flex w={'100vw'} h={'100%'} overflowY={"scroll"} justify={'center'}>
+    <Flex w={'100vw'} h={'100%'} overflowY={'scroll'} justify={'center'}>
       <Routes />
     </Flex>
 

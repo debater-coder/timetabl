@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import { AuthContext } from '../../AuthContext';
-import { Button, ButtonGroup, Flex, IconButton, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { Flex, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import { useLocation } from 'react-router-dom';
 import { FaMoon, FaSun } from 'react-icons/all';
 import Nav from '../Nav';
@@ -25,7 +25,7 @@ export default () => {
     <Flex direction={'column'} h={'100%'} w={'100%'}>
       <Header />
 
-      <Flex w={'100%'} overflowY={"scroll"} h={'100%'} justify={'center'}>
+      <Flex w={'100%'} overflowY={'scroll'} h={'100%'} justify={'center'}>
         <Routes />
       </Flex>
     </Flex>

@@ -1,24 +1,24 @@
-import { Flex, Text, useToken, chakra } from '@chakra-ui/react';
+import { chakra, Flex, Text, useToken } from '@chakra-ui/react';
 import React from 'react';
 
-export default ({subject, time, teacher, room, isCurrent, isBreak, roomChanged, teacherChanged, timeChanged}) => {
+export default ({ subject, time, teacher, room, isCurrent, isBreak, roomChanged, teacherChanged, timeChanged }) => {
   const [primary] = useToken('colors', ['primary.100']);
 
   return <Flex
-    w={"250px"}
+    w={'250px'}
     direction={'row'}
-    bg={primary + (isCurrent ? "20" : "10")}
-    justify={"space-between"}
+    bg={primary + (isCurrent ? '20' : '10')}
+    justify={'space-between'}
     mb={3}
     p={3}
     borderRadius={5}
-    boxShadow={isCurrent ? "md" : "sm"}
+    boxShadow={isCurrent ? 'md' : 'sm'}
   >
     <Flex
       direction={'column'}
       textAlign={'left'}
       mr={10}
-      fontSize={isBreak ? "xl" : "md"}
+      fontSize={isBreak ? 'xl' : 'md'}
     >
       <Text>{subject}</Text>
       {
@@ -26,21 +26,21 @@ export default ({subject, time, teacher, room, isCurrent, isBreak, roomChanged, 
           ?
           <Text fontSize={'xs'}>
             at
-            <chakra.b textColor={timeChanged ? "primary.100" : undefined}> {time} </chakra.b>
+            <chakra.b textColor={timeChanged ? 'primary.100' : undefined}> {time} </chakra.b>
             with
-            <chakra.span textColor={teacherChanged ? "primary.100" : undefined}> {teacher}</chakra.span>
+            <chakra.span textColor={teacherChanged ? 'primary.100' : undefined}> {teacher}</chakra.span>
           </Text>
           :
           <></>
       }
     </Flex>
-    <Flex fontSize={'2xl'} textAlign={"right"}>
+    <Flex fontSize={'2xl'} textAlign={'right'}>
       {
         isBreak
-        ?
-        <chakra.span textColor={timeChanged ? "primary.100" : undefined}>{time}</chakra.span>
-        :
-        <chakra.span textColor={roomChanged ? "primary.100" : undefined}>{room}</chakra.span>
+          ?
+          <chakra.span textColor={timeChanged ? 'primary.100' : undefined}>{time}</chakra.span>
+          :
+          <chakra.span textColor={roomChanged ? 'primary.100' : undefined}>{room}</chakra.span>
       }
     </Flex>
   </Flex>;

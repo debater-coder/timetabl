@@ -2,7 +2,7 @@ import { Box, Flex, Text, useColorModeValue, useToken } from '@chakra-ui/react';
 import React from 'react';
 import { motion } from 'framer-motion';
 
-export default ({ name, icon: Icon, active, sidebar }) => {
+export default ({ name, icon: Icon, active, sidebar, mirrored }) => {
   const hoverColor = useColorModeValue('gray.100', 'gray.700');
   const [secondary] = useToken('colors', ['secondary.100']);
   const MotionFlex = motion(Flex);
@@ -19,7 +19,7 @@ export default ({ name, icon: Icon, active, sidebar }) => {
       align={'center'}
       borderRadius={'16px'} h={'32px'}
     >
-      <Box minH={'24px'}><Icon size='24px' weight={active ? 'fill' : 'duotone'} /></Box>
+      <Box minH={'24px'}><Icon size='24px' mirrored={mirrored} weight={active ? 'fill' : 'duotone'} /></Box>
     </MotionFlex>
     <Text as={active ? 'b' : 'label'} fontSize={'sm'} mt='4px'>{name}</Text>
   </Flex>;
