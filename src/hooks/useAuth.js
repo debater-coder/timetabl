@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
+import contextualise from '../contextualise/contextualise';
+import config from '../config';
 
-export default (config, store = localStorage) => {
+let useAuth = (config, store = localStorage) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -143,3 +145,7 @@ export default (config, store = localStorage) => {
   }, []);
   return { loggedIn, login, isLoading, logout };
 };
+
+let [AuthProvider, useAuthGlobal] = contextualise(useAuth, [config], undefined)
+
+export { AuthProvider, useAuthGlobal as useAuth }

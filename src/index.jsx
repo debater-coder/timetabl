@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import App from './components/App.jsx';
 import { ChakraProvider } from '@chakra-ui/react';
 import theme from './theme';
-import { AuthProvider } from './components/AuthContext';
+import { AuthProvider } from './hooks/useAuth';
 import { BrowserRouter } from 'react-router-dom';
 
 ReactDOM.render(

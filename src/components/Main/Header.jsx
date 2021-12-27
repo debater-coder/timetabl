@@ -1,10 +1,10 @@
 import { Avatar, Flex, Menu, MenuButton, MenuItem, MenuList, useColorMode } from '@chakra-ui/react';
 import React, { useContext } from 'react';
-import { AuthContext } from '../AuthContext';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/useAuth';
 
 export default () => {
-  const { logout } = useContext(AuthContext);
+  const { logout } = useAuth();
   const { toggleColorMode } = useColorMode();
 
 
