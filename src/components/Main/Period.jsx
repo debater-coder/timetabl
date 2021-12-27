@@ -9,6 +9,7 @@ export default ({ subject, time, teacher, room, isCurrent, isBreak, roomChanged,
     direction={'row'}
     bg={primary + (isCurrent ? '20' : '10')}
     justify={'space-between'}
+    align={'center'}
     mb={3}
     p={3}
     borderRadius={5}
@@ -18,7 +19,7 @@ export default ({ subject, time, teacher, room, isCurrent, isBreak, roomChanged,
       direction={'column'}
       textAlign={'left'}
       mr={10}
-      fontSize={isBreak ? 'xl' : 'md'}
+      fontSize={'md'}
     >
       <Text>{subject}</Text>
       {
@@ -34,7 +35,7 @@ export default ({ subject, time, teacher, room, isCurrent, isBreak, roomChanged,
           <></>
       }
     </Flex>
-    <Flex fontSize={'2xl'} textAlign={'right'}>
+    <Flex fontSize={isBreak ? 'xl' : '2xl'} textAlign={'right'}>
       {
         isBreak
           ?

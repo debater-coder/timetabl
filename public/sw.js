@@ -1,7 +1,7 @@
 let CACHE_NAME = 'my-site-cache-v1';
 const urlsToCache = [
   '/',
-  '/dist/index.js'
+  '/dist/index.js',
 ];
 
 self.addEventListener('install', function(event) {
@@ -11,7 +11,7 @@ self.addEventListener('install', function(event) {
       .then(function(cache) {
         console.log('Opened cache');
         return cache.addAll(urlsToCache);
-      })
+      }),
   );
 });
 

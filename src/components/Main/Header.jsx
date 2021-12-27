@@ -1,5 +1,5 @@
 import { Avatar, Flex, Menu, MenuButton, MenuItem, MenuList, useColorMode } from '@chakra-ui/react';
-import React, { useContext } from 'react';
+import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 
@@ -16,8 +16,8 @@ export default () => {
         <MenuItem onClick={toggleColorMode}>
           Toggle dark mode
         </MenuItem>
-        <Link to={"/profile"}><MenuItem>Profile</MenuItem></Link>
-        <Link to={"/settings"}><MenuItem>Settings</MenuItem></Link>
+        <Link to={'/profile'}><MenuItem>Profile</MenuItem></Link>
+        <Link to={'/settings'}><MenuItem>Settings</MenuItem></Link>
         <MenuItem onClick={logout}>Logout</MenuItem>
       </MenuList>
     </Menu>

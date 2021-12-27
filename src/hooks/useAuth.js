@@ -146,6 +146,6 @@ let useAuth = (config, store = localStorage) => {
   return { loggedIn, login, isLoading, logout };
 };
 
-let [useAuthGlobal, AuthProvider] = contextualise(useAuth, [config], undefined)
+let [useAuthGlobal, AuthProvider] = contextualise(useAuth, [config], undefined);
 
-export { AuthProvider, useAuthGlobal as useAuth }
+export { AuthProvider, useAuthGlobal as useAuth };

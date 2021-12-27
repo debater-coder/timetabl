@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { Flex, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import { useLocation } from 'react-router-dom';
 import { FaMoon, FaSun } from 'react-icons/all';

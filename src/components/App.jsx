@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Landing from './Landing/Landing';
 import Main from './Main/Main';
 import FullScreenLoading from './FullScreenLoading';
