@@ -5,19 +5,14 @@ import { ChakraProvider } from '@chakra-ui/react';
 import theme from './theme';
 import { AuthProvider } from './hooks/useAuth';
 import { BrowserRouter } from 'react-router-dom';
+import { Compose, withProps } from './contextualise/src/contextualise';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <ChakraProvider theme={theme}>
-      <AuthProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
-      </AuthProvider>
-    </ChakraProvider>
-  </React.StrictMode>,
-  document.getElementById('root'),
-);
+  <Compose components={[React.StrictMode, withProps(ChakraProvider, {theme}), AuthProvider, BrowserRouter]}>
+    <App/>
+  </Compose>,
+  document.getElementById('root')
+)
 
 // Hot Module Replacement (HMR) - Remove this snippet to remove HMR.
 // Learn more: https://www.snowpack.dev/concepts/hot-module-replacement

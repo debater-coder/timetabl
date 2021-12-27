@@ -1,5 +1,4 @@
 import React, { createContext, useContext } from 'react';
-import theme from '../theme';
 
 export default (hook, config, defaultValue) => {
   const Context = createContext(defaultValue)
