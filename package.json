@@ -22,7 +22,7 @@
     "apollo-server-lambda": "^2.25.2",
     "cookie": "^0.4.1",
     "framer-motion": "^4.1.17",
-    "graphql": "^15.5.1",
+    "graphql": "^15.8.0",
     "luxon": "^2.0.2",
     "node-fetch": "^2.6.1",
     "react": "^17.0.2",
