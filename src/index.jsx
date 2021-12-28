@@ -6,9 +6,16 @@ import theme from './theme';
 import { AuthProvider } from './hooks/useAuth';
 import { BrowserRouter } from 'react-router-dom';
 import { Compose, withProps } from './contextualise/src/contextualise';
+import { DataProvider } from './hooks/useDataManager';
 
 ReactDOM.render(
-  <Compose components={[React.StrictMode, withProps(ChakraProvider, { theme }), AuthProvider, BrowserRouter]}>
+  <Compose components={[
+    React.StrictMode,
+    withProps(ChakraProvider, { theme }),
+    AuthProvider,
+    DataProvider,
+    BrowserRouter
+  ]}>
     <App />
   </Compose>,
   document.getElementById('root'),

@@ -1,10 +1,10 @@
 import React, { createContext, useContext } from 'react';
 
-export default (hook, config, defaultValue) => {
+export default (hook, hookConfig, defaultValue) => {
   const Context = createContext(defaultValue);
 
   const Provider = ({ children }) =>
-    <Context.Provider value={hook(...config)}>
+    <Context.Provider value={hook(...hookConfig)}>
       {children}
     </Context.Provider>;
 

@@ -4,13 +4,16 @@ import { useBarcode } from 'react-barcodes';
 import { Barcode as PhosphorBarcode, CaretDown as PhosphorCaretDown } from 'phosphor-react';
 import { useInView } from 'react-intersection-observer';
 import DailyTimetable from '../DailyTimetable';
+import { useDataManager } from '../../../hooks/useDataManager';
 
 const Barcode = chakra(PhosphorBarcode);
 const CaretDown = chakra(PhosphorCaretDown);
 
 export default () => {
+  const { periods, studentID } = useDataManager()
+
   const { inputRef: barcodeRef } = useBarcode({
-    value: '444315458',
+    value: studentID.toString(),
     options: {
       displayValue: false,
       background: '#ffffff',
@@ -20,65 +23,7 @@ export default () => {
   const { ref: scrollRef, inView } = useInView({ threshold: 0.5 });
 
   return <Flex direction={'column'} align={'center'}>
-    {/*<Flex direction={'row'} align={'baseline'}><Text fontSize={'xl'}>Roll call </Text><Text ml={1}>in</Text></Flex>*/}
-    {/*<Heading as={'h1'} size={'3xl'} mb={7}>00:05:00</Heading>*/}
-    {/*<Period subject={'Geography'} time={'9:30'} room={507} teacher={'M Jas'} roomChanged teacherChanged/>*/}
-    {/*<Period subject={'Music'} isCurrent time={'10:30'} room={214} teacher={'S Lim'} timeChanged />*/}
-    {/*<Period subject={'Recess'} isBreak time={'11:25'} />*/}
-    {/*<Period subject={'Visual Arts'} time={'11:45'} room={707} teacher={'E Apostolides'} />*/}
-    {/*<Period isBreak subject={'Lunch'} time={'12:40'} />*/}
-    {/*<Period subject={'English'} room={'701'} time={'1:30'} teacher={'D Taylor'} teacherChanged roomChanged />*/}
-    {/*<Period subject={'Design Technology'} room={501} time={'2:40'} teacher={'L Chapple'} teacherChanged />*/}
-    <DailyTimetable nextPeriod={'Roll call'} timeUntilNextPeriod={'00:05:00'} periods={[
-      {
-        subject: 'Geography',
-        time: '9:30',
-        room: 507,
-        teacher: 'M Jas',
-        roomChanged: true,
-        teacherChanged: true,
-      },
-      {
-        subject: 'Music',
-        time: '10:30',
-        room: 214,
-        teacher: 'Ms Lim',
-        timeChanged: true,
-        isCurrent: true,
-      },
-      {
-        subject: 'Recess',
-        isBreak: true,
-        time: '11:15',
-      },
-      {
-        subject: 'Visual Arts',
-        time: '11:45',
-        room: 707,
-        teacher: 'E Apostiledes',
-      },
-      {
-        subject: 'Lunch',
-        isBreak: true,
-        time: '12:40',
-      },
-      {
-        subject: 'English',
-        time: '12:30',
-        room: 701,
-        teacher: 'D Taylor',
-        teacherChanged: true,
-        roomChanged: true,
-      },
-      {
-        subject: 'Design Technology',
-        time: '2:40',
-        room: 501,
-        teacher: 'L Chapple',
-        teacherChanged: true,
-      },
-
-    ]} />
+    <DailyTimetable nextPeriod={'Roll call'} timeUntilNextPeriod={'00:05:00'} periods={periods} />
     <Tooltip label={'You can use this barcode to scan in'} closeOnClick={false}>
       <Icon boxSize={7} mb={3} mt={5} />
     </Tooltip>

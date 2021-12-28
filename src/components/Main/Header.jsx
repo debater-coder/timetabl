@@ -2,15 +2,17 @@ import { Avatar, Flex, Menu, MenuButton, MenuItem, MenuList, useColorMode } from
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
+import { useDataManager } from '../../hooks/useDataManager';
 
 export default () => {
   const { logout } = useAuth();
   const { toggleColorMode } = useColorMode();
 
+  const { name } = useDataManager()
 
   return <Flex w={'100%'} justify={'right'} align={'center'} pt={'10px'} pb={'10px'}>
     <Menu>
-      <MenuButton ml={3} mr={10} title={'Menu'}><Avatar name={'Hamzah Ahmed'} bg={'primary.100'}
+      <MenuButton ml={3} mr={10} title={'Menu'}><Avatar name={name} bg={'primary.100'}
                                                         size={'sm'} /></MenuButton>
       <MenuList>
         <MenuItem onClick={toggleColorMode}>
