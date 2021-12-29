@@ -1,17 +1,46 @@
 import Nav from './Nav';
 import Hero from './Hero';
-import { Box, ButtonGroup, Divider, Flex, IconButton, Image, Stack, Text, useColorModeValue } from '@chakra-ui/react';
+import {
+  Box,
+  ButtonGroup,
+  chakra,
+  Divider,
+  Flex,
+  IconButton,
+  Image, Spinner,
+  Stack,
+  Text,
+  useColorModeValue,
+} from '@chakra-ui/react';
 import React from 'react';
 import DailyTimetable from '../Main/DailyTimetable';
-import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
-import { chakra } from '@chakra-ui/react';
+import { FaGithub } from 'react-icons/fa';
 import { Student } from 'phosphor-react';
+import { useQuery } from 'urql';
+import { DateTime } from 'luxon';
 
+// language=GraphQL
+const query = `
+  query {
+      bells(date: "2021-08-30") {
+          bells {
+              bell
+              time
+          }
+      }
+  }
+`
 
 export default ({ onCTAClick }) => {
 
   const timetableColor = useColorModeValue('gray.50', 'gray.700');
   const textColor = useColorModeValue('primary.700', 'primary.200');
+  const [result, reexecuteQuery] = useQuery({
+    query,
+  })
+
+  const {data, fetching, error} = result;
+  if (error) console.error(error)
 
   return <>
     <Flex direction='column' align='center' maxW={{ xl: '1200px' }} m='0 auto'>
@@ -25,65 +54,54 @@ export default ({ onCTAClick }) => {
           justifyContent='center'
           direction='column'
         >
-          <DailyTimetable nextPeriod={'Roll call'} timeUntilNextPeriod={'00:05:00'} periods={[
-            {
-              isBreak: true,
-              subject: 'Period 1',
-              time: '9:05',
-            },
-            {
-              isBreak: true,
-              subject: 'Period 2',
-              time: '10:10',
-              isCurrent: true,
-            },
-            {
-              isBreak: true,
-              subject: 'Recess',
-              time: '11:10',
-            },
-            {
-              isBreak: true,
-              subject: 'Period 3',
-              time: '12:10',
-            },
-            {
-              isBreak: true,
-              subject: 'Lunch',
-              time: '1:10',
-            },
-            {
-              isBreak: true,
-              subject: 'Period 4',
-              time: '2:10',
-            },
-            {
-              isBreak: true,
-              subject: 'Period 5',
-              time: '3:10',
-            },
-          ]} headingSize={'2xl'} />
+          {
+            fetching ?
+            <Spinner />
+            :
+            <DailyTimetable
+              nextPeriod={'Roll call'}
+              timeUntilNextPeriod={'00:05:00'}
+              periods={
+                data.bells.bells.filter(bell => DateTime.fromISO(bell.time) >= DateTime.fromISO("09:00")).map(
+                  bell => {
+                    let subject = bell.bell
+                    let time = bell.time
+                    if (subject.length === 1) {
+                      subject = `Period ${subject}`
+                    }
+                    return {
+                      subject,
+                      time,
+                      isBreak: true
+                    }
+                  }
+                )
+              }
+              headingSize={'2xl'} />
+          }
         </Flex>
       </Hero>
     </Flex>
-    <Divider/>
+    <Divider />
     <Box
-      as="footer"
-      role="contentinfo"
-      mx="auto"
-      maxW="7xl"
-      py="12"
+      as='footer'
+      role='contentinfo'
+      mx='auto'
+      maxW='7xl'
+      py='12'
       px={{
         base: '4',
         md: '8',
       }}
     >
       <Stack>
-        <Stack direction="row" spacing="4" align="center" justify="space-between">
-          <Image src={"favicon.ico"} boxSize={"40px"} />
-          <ButtonGroup variant="ghost" color="gray.600">
-            <IconButton as="a" href="https://www.sydneyboyshigh.com/" aria-label="Student Portal" icon={<Student size={20} weight="fill" />} />
-            <IconButton as="a" href="https://github.com/debater-coder/timetabl" aria-label="GitHub" icon={<FaGithub fontSize="20px" />} />
+        <Stack direction='row' spacing='4' align='center' justify='space-between'>
+          <Image src={'favicon.ico'} boxSize={'40px'} />
+          <ButtonGroup variant='ghost' color='gray.600'>
+            <IconButton as='a' href='https://www.sydneyboyshigh.com/' aria-label='Student Portal'
+                        icon={<Student size={20} weight='fill' />} />
+            <IconButton as='a' href='https://github.com/debater-coder/timetabl' aria-label='GitHub'
+                        icon={<FaGithub fontSize='20px' />} />
           </ButtonGroup>
         </Stack>
         <Text
@@ -94,9 +112,10 @@ export default ({ onCTAClick }) => {
         >
           <chakra.span
             color={textColor}
-            fontWeight={"medium"}
-            display={"inline"}
-          >Timetabl </chakra.span>
+            fontWeight={'medium'}
+            display={'inline'}
+          >Timetabl&nbsp;
+          </chakra.span>
           is made by Hamzah Ahmed
         </Text>
       </Stack>

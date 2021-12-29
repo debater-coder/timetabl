@@ -7,14 +7,19 @@ import { AuthProvider } from './hooks/useAuth';
 import { BrowserRouter } from 'react-router-dom';
 import { Compose, withProps } from './contextualise/src/contextualise';
 import { DataProvider } from './hooks/useDataManager';
+import initServiceWorker from './initServiceWorker';
+import UrqlProvider from './initGraphQL';
+import { BannerProvider } from './hooks/useBanner';
 
 ReactDOM.render(
   <Compose components={[
     React.StrictMode,
     withProps(ChakraProvider, { theme }),
+    UrqlProvider,
+    BannerProvider,
     AuthProvider,
     DataProvider,
-    BrowserRouter
+    BrowserRouter,
   ]}>
     <App />
   </Compose>,
@@ -27,14 +32,4 @@ if (import.meta.hot) {
   import.meta.hot.accept();
 }
 
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('/sw.js').then(function(registration) {
-      // Registration was successful
-      console.log('ServiceWorker registration successful with scope: ', registration.scope);
-    }, function(err) {
-      // registration failed :(
-      console.log('ServiceWorker registration failed: ', err);
-    });
-  });
-}
+initServiceWorker()

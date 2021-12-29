@@ -1,4 +1,4 @@
-import { Flex, IconButton, Text, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { Badge, Flex, IconButton, Spacer, Text, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import { FaGithub, FaMoon, FaSun } from 'react-icons/all';
 import React from 'react';
 
@@ -11,7 +11,6 @@ export default () => {
   return <Flex
     as='nav'
     align='center'
-    justify='space-between'
     wrap='wrap'
     w='100%'
     h='70%'
@@ -20,9 +19,10 @@ export default () => {
     bg={'transparent'}
     color={textColor}
   >
-    <Text fontWeight='medium'>Timetabl</Text>
+    <Text fontWeight='medium'>Timetabl&nbsp;</Text><Badge colorScheme={"teal"} variant={"subtle"} >Alpha</Badge>
+    <Spacer />
     <Flex>
-      <IconButton onClick={toggleColorMode} aria-label='Dark mode' color={iconColor} icon={icon} mr={1} />
+      <IconButton onClick={toggleColorMode} aria-label='Dark mode' color={iconColor} icon={icon} mr={1}/>
       <a href='https://github.com/debater-coder/timetabl'>
         <IconButton color={iconColor} icon={<FaGithub />} aria-label='Github Repository' />
       </a>

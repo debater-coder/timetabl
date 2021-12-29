@@ -1,10 +1,17 @@
 import { useEffect, useState } from 'react';
 import contextualise from '../contextualise/src/contextualise';
 import config from '../config';
+import lodash from "lodash"
+import React from 'react';
+import { useBanner } from './useBanner';
+import { Alert, AlertIcon, AlertTitle, Button } from '@chakra-ui/react';
 
 let useAuth = (config, store = localStorage) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [shouldLogin, setShouldLogin] = useState(false);
+  const {banner, setBanner} = useBanner()
+
 
   /////////////////////////////////////////////////////////////////////
   // PKCE HELPER FUNCTIONS
@@ -80,6 +87,8 @@ let useAuth = (config, store = localStorage) => {
       '&code_challenge_method=S256';
   };
 
+  const refresh = lodash.throttle(() => fetch(config.auth_endpoint, { method: 'PATCH' }), 1000)
+
   // Logout Function
   const logout = () => {
     setLoggedIn(false);
@@ -129,6 +138,7 @@ let useAuth = (config, store = localStorage) => {
             store.setItem('loggedIn', 'true');
             setLoggedIn(true);
             setIsLoading(false);
+            setShouldLogin(false)
           });
       }
 
@@ -140,10 +150,20 @@ let useAuth = (config, store = localStorage) => {
       setIsLoading(false);
     } else {
       setLoggedIn(false);
+      setShouldLogin(false)
       setIsLoading(false);
     }
   }, []);
-  return { loggedIn, login, isLoading, logout };
+
+  useEffect(() => {
+    if (shouldLogin) {
+      setBanner(
+        <Alert status={"warning"} rounded={5} variant={"left-accent"}><AlertIcon /><AlertTitle>Log in to see the latest information.</AlertTitle><Button onClick={login}>Log in</Button></Alert>
+      )
+    }
+  }, [shouldLogin])
+
+  return { loggedIn, login, isLoading, logout, refresh, shouldLogIn: shouldLogin, setShouldLogin };
 };
 
 let [useAuthGlobal, AuthProvider] = contextualise(useAuth, [config], undefined);

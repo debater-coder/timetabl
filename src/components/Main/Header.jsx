@@ -1,16 +1,19 @@
-import { Avatar, Flex, Menu, MenuButton, MenuItem, MenuList, useColorMode } from '@chakra-ui/react';
+import { Avatar, Flex, Heading, Menu, MenuButton, MenuItem, MenuList, Text, useColorMode } from '@chakra-ui/react';
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuth } from '../../hooks/useAuth';
 import { useDataManager } from '../../hooks/useDataManager';
+import { useBanner } from '../../hooks/useBanner';
 
-export default () => {
+export default ({children}) => {
   const { logout } = useAuth();
   const { toggleColorMode } = useColorMode();
+  const { banner, setBanner } = useBanner()
+  const { name } = useDataManager();
 
-  const { name } = useDataManager()
-
-  return <Flex w={'100%'} justify={'right'} align={'center'} pt={'10px'} pb={'10px'}>
+  return <Flex w={'100%'} justify={'space-between'} align={'center'} p={"10px"}>
+    <Heading size={"sm"}>Term 4 Week 5A</Heading>
+    <Flex>{banner}</Flex>
     <Menu>
       <MenuButton ml={3} mr={10} title={'Menu'}><Avatar name={name} bg={'primary.100'}
                                                         size={'sm'} /></MenuButton>
