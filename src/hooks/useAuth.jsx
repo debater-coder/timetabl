@@ -1,8 +1,17 @@
 import { useEffect, useState } from 'react';
+import contextualise from '../contextualise/src/contextualise';
+import config from '../config';
+import lodash from "lodash"
+import React from 'react';
+import { useBanner } from './useBanner';
+import { Alert, AlertIcon, AlertTitle, Button } from '@chakra-ui/react';
 
-export default (config, store = localStorage) => {
+let useAuth = (config, store = localStorage) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [shouldLogin, setShouldLogin] = useState(false);
+  const {banner, setBanner} = useBanner()
+
 
   /////////////////////////////////////////////////////////////////////
   // PKCE HELPER FUNCTIONS
@@ -78,22 +87,15 @@ export default (config, store = localStorage) => {
       '&code_challenge_method=S256';
   };
 
+  const refresh = lodash.throttle(() => fetch(config.auth_endpoint, { method: 'PATCH' }), 1000)
+
   // Logout Function
   const logout = () => {
     setLoggedIn(false);
-    store.removeItem("loggedIn")
+    store.removeItem('loggedIn');
     let _ = fetch(config.auth_endpoint, {
-      method: "DELETE"
+      method: 'DELETE',
     });
-  };
-
-  const refresh = () => {
-    // TODO: Implement refresh
-  };
-
-  // API request function
-  const apiRequest = async (endpoint) => {
-    // TODO: Implement api request
   };
 
   /////////////////////////////////////////////////////////////////
@@ -133,22 +135,37 @@ export default (config, store = localStorage) => {
             return response;
           })
           .then(() => {
-            store.setItem("loggedIn", "true")
+            store.setItem('loggedIn', 'true');
             setLoggedIn(true);
             setIsLoading(false);
+            setShouldLogin(false)
           });
       }
 
       // Clean these up since we don't need them anymore
       store.removeItem('pkce_state');
       store.removeItem('pkce_code_verifier');
-    } else if (store.getItem("loggedIn")) {
-      setLoggedIn(true)
-      setIsLoading(false)
+    } else if (store.getItem('loggedIn')) {
+      setLoggedIn(true);
+      setIsLoading(false);
     } else {
-      setLoggedIn(false)
+      setLoggedIn(false);
+      setShouldLogin(false)
       setIsLoading(false);
     }
   }, []);
-  return { loggedIn, login, isLoading, logout, apiRequest };
+
+  useEffect(() => {
+    if (shouldLogin) {
+      setBanner(
+        <Alert status={"warning"} rounded={5} variant={"left-accent"}><AlertIcon /><AlertTitle>Log in to see the latest information.</AlertTitle><Button onClick={login}>Log in</Button></Alert>
+      )
+    }
+  }, [shouldLogin])
+
+  return { loggedIn, login, isLoading, logout, refresh, shouldLogIn: shouldLogin, setShouldLogin };
 };
+
+let [useAuthGlobal, AuthProvider] = contextualise(useAuth, [config], undefined);
+
+export { AuthProvider, useAuthGlobal as useAuth };

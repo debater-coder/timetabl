@@ -6,13 +6,10 @@ export default {
   },
   plugins: ['@snowpack/plugin-react-refresh', '@snowpack/plugin-dotenv',
     [
-      '@snowpack/plugin-webpack'
-    ]
+      '@snowpack/plugin-webpack',
+    ],
   ],
-  routes: [
-    /* Enable an SPA Fallback in development: */
-    // {"match": "routes", "src": ".*", "dest": "/index.html"},
-  ],
+  routes: [],
   optimize: {
     /* Example: Bundle your final build: */
     // "bundle": true,
@@ -21,6 +18,7 @@ export default {
     /* ... */
   },
   devOptions: {
+    open: 'none',
   },
   buildOptions: {
     /* ... */

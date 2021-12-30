@@ -1,30 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import App from './components/App.jsx';
-import { ChakraProvider } from "@chakra-ui/react"
-import theme from "./theme"
-import { createClient, Provider} from 'urql';
-import config from './config';
-import { AuthProvider } from './components/AuthContext';
-
-const client = createClient({
-  url: config.api_endpoint,
-  fetchOptions: () => ({
-    credentials: "same-origin"
-  }),
-  requestPolicy: "cache-and-network"
-});
+import { ChakraProvider } from '@chakra-ui/react';
+import theme from './theme';
+import { AuthProvider } from './hooks/useAuth';
+import { BrowserRouter } from 'react-router-dom';
+import { Compose, withProps } from './contextualise/src/contextualise';
+import { DataProvider } from './hooks/useDataManager';
+import initServiceWorker from './initServiceWorker';
+import UrqlProvider from './initGraphQL';
+import { BannerProvider } from './hooks/useBanner';
 
 ReactDOM.render(
-  <React.StrictMode>
-      <ChakraProvider theme={theme}>
-        <Provider value={client}>
-          <AuthProvider>
-            <App />
-          </AuthProvider>
-        </Provider>
-      </ChakraProvider>
-  </React.StrictMode>,
+  <Compose components={[
+    React.StrictMode,
+    withProps(ChakraProvider, { theme }),
+    UrqlProvider,
+    BannerProvider,
+    AuthProvider,
+    DataProvider,
+    BrowserRouter,
+  ]}>
+    <App />
+  </Compose>,
   document.getElementById('root'),
 );
 
@@ -33,3 +31,5 @@ ReactDOM.render(
 if (import.meta.hot) {
   import.meta.hot.accept();
 }
+
+initServiceWorker()

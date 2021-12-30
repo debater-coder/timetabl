@@ -1,13 +1,13 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import Landing from './Landing/Landing';
-import { AuthContext } from './AuthContext';
-import Private from './Main/Main';
-import { Fade, Flex, Spinner } from '@chakra-ui/react';
+import Main from './Main/Main';
 import FullScreenLoading from './FullScreenLoading';
+import { useAuth } from '../hooks/useAuth';
 
 let App = () => {
-  const { loggedIn, login, isLoading } = useContext(AuthContext)
-  return <FullScreenLoading isLoading={isLoading}>{loggedIn ? <Private /> : <Landing onCTAClick={login} />}</FullScreenLoading>
+  const { loggedIn, login, isLoading } = useAuth();
+  return <FullScreenLoading isLoading={isLoading}>{loggedIn ? <Main /> :
+    <Landing onCTAClick={login} />}</FullScreenLoading>;
 
 };
 
