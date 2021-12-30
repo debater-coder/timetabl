@@ -104,7 +104,6 @@ const useDataManager = () => {
   )
   useEffect(() => {
     if (!fetching && !isLoading && loggedIn && !error) {
-      console.log(newData)
       setData(draft => {
         const { givenName, studentId, surname } = newData.user;
         draft.studentID = studentId

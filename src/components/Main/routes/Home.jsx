@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Box, chakra, Flex, Icon, Spinner, Tooltip } from '@chakra-ui/react';
 import { useBarcode } from 'react-barcodes';
 import { Barcode as PhosphorBarcode, CaretDown as PhosphorCaretDown } from 'phosphor-react';
