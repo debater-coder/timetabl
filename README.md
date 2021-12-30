@@ -12,7 +12,7 @@ Timetabl is a fast, modern, and reliable timetable app for Sydney Boys High Scho
 
 * View your timetable
 * Push notifications and alarms
-* Dark mode
+* Dark mode and Light mode
 * Scan on with your phone
 * Installable app
 * Syncs in the background
