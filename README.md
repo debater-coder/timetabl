@@ -10,27 +10,32 @@ Timetabl is a fast, modern, and reliable timetable app for Sydney Boys High Scho
 
 ## Features
 
-* View your timetable
-* Push notifications and alarms
-* Dark mode and Light mode
-* Scan on with your phone
-* Installable app
-* Syncs in the background
-* Works offline
-* Whitelisted on the DET
-* View Daily Notices and High Notes
-* View your Calendar
-* See your award scheme points in detail
-* Stay signed in for up to 90 days
-* Beautiful UI (subjective, but I think most people would agree)
-* _Coming soon:_ Manage your homework and sync with Canvas or other task management platforms with Timetabl Tasks
-* _Coming soon:_ View your timetable on your home screen with Timetabl Widgets
-* _Coming soon:_ See your train timetables in app
+- [ ] View your timetable
+- [ ] Push notifications and alarms
+- [x] Dark mode and Light mode
+- [x] Scan on with your phone
+- [x] Installable app
+- [ ] Syncs in the background
+- [ ] Works offline
+- [x] Whitelisted on the DET
+- [ ] View Daily Notices and High Notes
+- [ ] View your Calendar
+- [ ] See your award scheme points in detail
+- [x] Stay signed in for up to 90 days
+- [x] Beautiful UI (subjective, but I think most people would agree)
+- [ ] _Coming soon:_ Manage your homework and sync with Canvas or other task management platforms with Timetabl Tasks
+- [ ] _Coming soon:_ View your timetable on your home screen with Timetabl Widgets
+- [ ] _Coming soon:_ See your train timetables in app
 
 ## Support
 
 Make an issue or post something in the [Discussions](https://github.com/debater-coder/timetabl/discussions) section if
 you have a feature request or complaint.
+
+## Config
+
+To configure this app, edit config.json with your parameters. 
+
 
 ## Building
 
