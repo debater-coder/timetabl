@@ -34,7 +34,7 @@ you have a feature request or complaint.
 
 ## Config
 
-To configure this app, edit config.json with your parameters. 
+To configure this app, edit src/config.json with your parameters. 
 
 
 ## Building
