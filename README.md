@@ -3,7 +3,7 @@
 [![Netlify Status](https://api.netlify.com/api/v1/badges/e7c169e7-4555-4dbb-9b7e-0bdb4a120a56/deploy-status)](https://app.netlify.com/sites/sbhs-timetabl/deploys)
 [![CodeQL](https://github.com/debater-coder/timetabl/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/debater-coder/timetabl/actions/workflows/codeql-analysis.yml)
 
-> 🚧 WIP (Work in progress) AKA most of the features below are still in development.
+> 🚧 WIP (Work in progress) AKA most of the features below are still in development. AND I KEEP BREAKING EVERYTHING!!!!
 
 Timetabl is a fast, modern, and reliable timetable app for Sydney Boys High School.
 ![image](https://user-images.githubusercontent.com/52619668/147728163-2e2553cf-7008-4ecd-8f8b-4c9a8302f6c8.png)
