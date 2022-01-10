@@ -22,7 +22,7 @@
     "apollo-server": "^3.6.1",
     "apollo-server-lambda": "^3.6.1",
     "cookie": "^0.4.1",
-    "framer-motion": "^4.1.17",
+    "framer-motion": "^5.5.6",
     "graphql": "^16.2.0",
     "immer": "^9.0.7",
     "lodash": "^4.17.21",
