@@ -42,6 +42,6 @@
   },
   "devDependencies": {
     "@testing-library/react": "^12.1.2",
-    "@web/test-runner": "^0.13.23"
+    "@web/test-runner": "^0.13.25"
   }
 }
