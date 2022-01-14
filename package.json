@@ -24,7 +24,7 @@
     "cookie": "^0.4.1",
     "framer-motion": "^4.1.17",
     "graphql": "^16.2.0",
-    "immer": "^9.0.7",
+    "immer": "^9.0.12",
     "lodash": "^4.17.21",
     "luxon": "^2.3.0",
     "netlify-cli": "^8.6.4",
