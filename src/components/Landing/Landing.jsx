@@ -44,7 +44,7 @@ export default ({ onCTAClick }) => {
 
   let testing = false;
   testing = true; // Remove after testing
-  console.log(__SNOWPACK_ENV__.SNOWPACK_PUBLIC_TEST_THING)
+  console.log(process.env.SNOWPACK_PUBLIC_TEST_THING)
 
   return <>
     <Flex direction='column' align='center' maxW={{ xl: '1200px' }} m='0 auto'>
