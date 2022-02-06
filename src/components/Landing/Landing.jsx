@@ -42,6 +42,9 @@ export default ({ onCTAClick }) => {
   const {data, fetching, error} = result;
   if (error) console.error(error)
 
+  let testing = false;
+  testing = true; // Remove after testing
+
   return <>
     <Flex direction='column' align='center' maxW={{ xl: '1200px' }} m='0 auto'>
       <Nav />
@@ -55,7 +58,7 @@ export default ({ onCTAClick }) => {
           direction='column'
         >
           {
-            fetching ?
+            fetching || testing ?
             <Spinner />
             :
             <DailyTimetable
