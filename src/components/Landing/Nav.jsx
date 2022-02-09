@@ -19,7 +19,7 @@ export default () => {
     bg={'transparent'}
     color={textColor}
   >
-    <Link fontWeight='medium'>Timetabl</Link>&nbsp;<Badge colorScheme={"teal"} variant={"subtle"} >Alpha</Badge>
+    <Link fontWeight='medium' href={"/"}>Timetabl</Link>&nbsp;<Badge colorScheme={"teal"} variant={"subtle"} >Alpha</Badge>
     <Spacer />
     <Flex>
       <IconButton onClick={toggleColorMode} aria-label='Dark mode' color={iconColor} icon={icon} mr={1}/>
