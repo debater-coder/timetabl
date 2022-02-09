@@ -7,7 +7,7 @@ import {
   Divider,
   Flex,
   IconButton,
-  Image, Spinner,
+  Image, Link, Spinner,
   Stack,
   Text,
   useColorModeValue,
@@ -113,12 +113,13 @@ export default ({ onCTAClick }) => {
             sm: 'start',
           }}
         >
-          <chakra.span
+          <Link
             color={textColor}
             fontWeight={'medium'}
             display={'inline'}
+            href={"/"}
           >Timetabl&nbsp;
-          </chakra.span>
+          </Link>
           is made by Hamzah Ahmed
         </Text>
       </Stack>
