@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Flex, Heading, Stack, Text, useColorModeValue } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, Link, Stack, Text, useColorModeValue } from '@chakra-ui/react';
 
 export default props => {
   const textColor = useColorModeValue('primary.800', 'primary.100');
@@ -53,15 +53,16 @@ export default props => {
       >
         Log in with SBHS
       </Button>
-      <Text
+      <Link
         fontSize='xs'
         mt={2}
         textAlign='center'
         color={textColor}
         opacity='0.6'
+        href={"https://github.com/debater-coder/timetabl"}
       >
         Free and open source
-      </Text>
+      </Link>
     </Stack>
     <Box>
       {props.children}
