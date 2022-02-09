@@ -118,9 +118,9 @@ export default ({ onCTAClick }) => {
             fontWeight={'medium'}
             display={'inline'}
             href={"/"}
-          >Timetabl&nbsp;
+          >Timetabl
           </Link>
-          is made by Hamzah Ahmed
+          &nbsp;is made by Hamzah Ahmed
         </Text>
       </Stack>
     </Box>
