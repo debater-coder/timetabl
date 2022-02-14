@@ -17,7 +17,7 @@ Timetabl is a fast, modern, and reliable timetable app for Sydney Boys High Scho
 - [x] Installable app
 - [ ] Syncs in the background
 - [ ] Works offline
-- [x] Whitelisted on the DET
+- [x] Available on school wifi networks
 - [ ] View Daily Notices and High Notes
 - [ ] View your Calendar
 - [ ] See your award scheme points in detail
