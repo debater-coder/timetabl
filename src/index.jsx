@@ -7,7 +7,6 @@ import { AuthProvider } from './hooks/useAuth';
 import { BrowserRouter } from 'react-router-dom';
 import { Compose, withProps } from './contextualise/src/contextualise';
 import { DataProvider } from './hooks/useDataManager';
-import initServiceWorker from './initServiceWorker';
 import UrqlProvider from './initGraphQL';
 import { BannerProvider } from './hooks/useBanner';
 
@@ -31,5 +30,3 @@ ReactDOM.render(
 if (import.meta.hot) {
   import.meta.hot.accept();
 }
-
-initServiceWorker()
