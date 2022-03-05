@@ -2,12 +2,12 @@ const fetch = require('node-fetch');
 const cookie = require('cookie');
 
 const config = {
-  client_id: 'timetabl',
-  redirect_uri: 'https://sbhs-timetabl.netlify.app/',
-  authorization_endpoint: 'https://student.sbhs.net.au/api/authorize',
-  token_endpoint: 'https://student.sbhs.net.au/api/token',
-  api_endpoint: 'https://student.sbhs.net.au/api',
-  scopes: 'all-ro',
+  client_id: import.meta.env.VITE_CLIENT_ID,
+  redirect_uri: import.meta.env.VITE_REDIRECT_URI,
+  authorization_endpoint: import.meta.env.VITE_AUTHORIZATION_ENDPOINT,
+  token_endpoint: import.meta.env.TOKEN_ENDPOINT,
+  api_endpoint: import.meta.env.API_ENDPOINT,
+  scopes: import.meta.env.VITE_SCOPES
 };
 
 const refresh = async (event) => {

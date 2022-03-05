@@ -31,6 +31,8 @@ if (import.meta.hot) {
   import.meta.hot.accept();
 }
 
+console.log(import.meta.env.VITE_TEST_THING)
+
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register("/sw.js", {scope: '/'})
     .then((reg) => {
