@@ -31,7 +31,12 @@ if (import.meta.hot) {
   import.meta.hot.accept();
 }
 
-console.log(import.meta.env.VITE_TEST_THING)
+console.log(
+  "%cWelcome to Timetabl, feel free to lurk around the console, or view the source code at: https://github.com/debater-coder/timetabl",
+  "background-color: #0093E9;" +
+  "background-image: linear-gradient(160deg, #0093E9 0%, #80D0C7 100%);" +
+  "border-radius: 32px;"
+)
 
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register("/sw.js", {scope: '/'})
