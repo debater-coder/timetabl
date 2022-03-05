@@ -36,7 +36,7 @@ console.log(
   "background-color: #FBAB7E;" +
   "background-image: linear-gradient(62deg, #FBAB7E 0%, #F7CE68 100%);" +
   "border-radius: 32px;" +
-  "padding: 8px;"
+  "padding: 16px;"
 )
 
 if ('serviceWorker' in navigator) {
