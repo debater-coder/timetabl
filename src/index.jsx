@@ -7,14 +7,12 @@ import { AuthProvider } from './hooks/useAuth';
 import { BrowserRouter } from 'react-router-dom';
 import { Compose, withProps } from './contextualise/src/contextualise';
 import { DataProvider } from './hooks/useDataManager';
-import UrqlProvider from './initGraphQL';
 import { BannerProvider } from './hooks/useBanner';
 
 ReactDOM.render(
   <Compose components={[
     React.StrictMode,
     withProps(ChakraProvider, { theme }),
-    UrqlProvider,
     BannerProvider,
     AuthProvider,
     DataProvider,

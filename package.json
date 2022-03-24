@@ -29,7 +29,6 @@
     "react-icons": "^4.2.0",
     "react-intersection-observer": "^8.33.1",
     "react-router-dom": "^6.2.1",
-    "urql": "^2.0.4",
     "use-immer": "^0.6.0"
   },
   "devDependencies": {

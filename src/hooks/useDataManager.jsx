@@ -1,21 +1,7 @@
 import contextualise from '../contextualise/src/contextualise';
 import { useImmer } from 'use-immer';
 import { useAuth } from './useAuth';
-import { useQuery } from 'urql';
 import React, { useEffect } from 'react';
-import { Alert, AlertIcon, AlertTitle, Button, useToast } from '@chakra-ui/react';
-import lodash from "lodash"
-
-// language=GraphQL
-const query = `
-    query {
-        user {
-            givenName
-            surname
-            studentId
-        }
-    }
-`
 
 const useDataManager = () => {
   const [data, setData] = useImmer({
@@ -75,42 +61,6 @@ const useDataManager = () => {
   });
 
   const { loggedIn, login, isLoading, refresh, setShouldLogin } = useAuth();
-
-  const [{ data: newData, error, fetching }, reexecuteQuery] = useQuery({
-    query,
-    pause: isLoading || !loggedIn
-  })
-
-
-  const handleErrors = error => {
-    let errorCode = error.graphQLErrors[0].message.split(":")[0]
-    if (errorCode === "0x03") {
-      refresh().then(response => {
-        if (!response.ok) {
-          setShouldLogin(true)
-        } else {
-          reexecuteQuery()
-        }
-      })
-    } else {
-      throw error
-    }
-
-  }
-  useEffect(
-    () => {
-      if (error) handleErrors(error);
-    }, [error]
-  )
-  useEffect(() => {
-    if (!fetching && !isLoading && loggedIn && !error) {
-      setData(draft => {
-        const { givenName, studentId, surname } = newData.user;
-        draft.studentID = studentId
-        draft.name = `${givenName} ${surname}`
-      })
-    }
-  }, [newData])
 
 
   return data

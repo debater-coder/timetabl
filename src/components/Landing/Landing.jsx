@@ -16,34 +16,13 @@ import React from 'react';
 import DailyTimetable from '../Main/DailyTimetable';
 import { FaGithub } from 'react-icons/fa';
 import { Student } from 'phosphor-react';
-import { useQuery } from 'urql';
 import { DateTime } from 'luxon';
 
-// language=GraphQL
-const query = `
-  query {
-      bells(date: "2021-08-30") {
-          bells {
-              bell
-              time
-          }
-      }
-  }
-`
 
 export default ({ onCTAClick }) => {
 
   const timetableColor = useColorModeValue('gray.50', 'gray.700');
   const textColor = useColorModeValue('primary.700', 'primary.200');
-  const [result, reexecuteQuery] = useQuery({
-    query,
-  })
-
-  const {data, fetching, error} = result;
-  if (error) console.error(error)
-
-  let testing = false;
-  testing = true; // Remove after testing
 
   return <>
     <Flex direction='column' align='center' maxW={{ xl: '1200px' }} m='0 auto'>
@@ -57,31 +36,7 @@ export default ({ onCTAClick }) => {
           justifyContent='center'
           direction='column'
         >
-          {
-            fetching || testing ?
-            <Spinner />
-            :
-            <DailyTimetable
-              nextPeriod={'Roll call'}
-              timeUntilNextPeriod={'00:05:00'}
-              periods={
-                data.bells.bells.filter(bell => DateTime.fromISO(bell.time) >= DateTime.fromISO("09:00")).map(
-                  bell => {
-                    let subject = bell.bell
-                    let time = bell.time
-                    if (subject.length === 1) {
-                      subject = `Period ${subject}`
-                    }
-                    return {
-                      subject,
-                      time,
-                      isBreak: true
-                    }
-                  }
-                )
-              }
-              headingSize={'2xl'} />
-          }
+
         </Flex>
       </Hero>
     </Flex>
