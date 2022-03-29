@@ -8,17 +8,23 @@ import { BrowserRouter } from 'react-router-dom';
 import { Compose, withProps } from './contextualise/src/contextualise';
 import { DataProvider } from './hooks/useDataManager';
 import { BannerProvider } from './hooks/useBanner';
+import { QueryClientProvider } from 'react-query';
+import queryClient from './initQuery';
+import { ReactQueryDevtools } from 'react-query/devtools'
+
 
 ReactDOM.render(
   <Compose components={[
     React.StrictMode,
     withProps(ChakraProvider, { theme }),
+    withProps(QueryClientProvider, { client: queryClient }),
     BannerProvider,
     AuthProvider,
     DataProvider,
     BrowserRouter,
   ]}>
     <App />
+    <ReactQueryDevtools initialIsOpen={false} />
   </Compose>,
   document.getElementById('root'),
 );
