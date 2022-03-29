@@ -60,7 +60,7 @@ const useDataManager = () => {
     shouldDisplayVariations: true,
   });
 
-  const { loggedIn, login, isLoading, refresh, setShouldLogin } = useAuth();
+  const { loggedIn, login, isLoading, setShouldLogin } = useAuth();
 
 
   return data

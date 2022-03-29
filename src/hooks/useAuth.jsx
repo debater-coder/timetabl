@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import contextualise from '../contextualise/src/contextualise';
 import config from '../config';
-import lodash from "lodash"
 import React from 'react';
 import { useBanner } from './useBanner';
 import { Alert, AlertIcon, AlertTitle, Button } from '@chakra-ui/react';
@@ -87,8 +86,6 @@ let useAuth = (config, store = localStorage) => {
       '&code_challenge_method=S256';
   };
 
-  const refresh = lodash.throttle(() => fetch(config.auth_endpoint, { method: 'PATCH' }), 1000)
-
   // Logout Function
   const logout = () => {
     setLoggedIn(false);
@@ -132,7 +129,14 @@ let useAuth = (config, store = localStorage) => {
             if (!res.ok) {
               throw new Error(`Error ${res.status}`)
             }
-            console.log(res.json())
+            return res.json()
+          }).then(data => {
+            store.setItem("access_token", data["access_token"])
+            store.setItem("refresh_token", data["refresh_token"])
+            store.setItem("loggedIn", "true")
+            setLoggedIn(true)
+            setIsLoading(false)
+            setShouldLogin(false)
           })
       }
       // Clean these up since we don't need them anymore
@@ -156,7 +160,7 @@ let useAuth = (config, store = localStorage) => {
     }
   }, [shouldLogin])
 
-  return { loggedIn, login, isLoading, logout, refresh, shouldLogIn: shouldLogin, setShouldLogin };
+  return { loggedIn, login, isLoading, logout, shouldLogIn: shouldLogin, setShouldLogin };
 };
 
 let [useAuthGlobal, AuthProvider] = contextualise(useAuth, [config], undefined);
