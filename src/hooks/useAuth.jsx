@@ -93,9 +93,6 @@ let useAuth = (config, store = localStorage) => {
   const logout = () => {
     setLoggedIn(false);
     store.removeItem('loggedIn');
-    let _ = fetch(config.auth_endpoint, {
-      method: 'DELETE',
-    });
   };
 
   /////////////////////////////////////////////////////////////////
@@ -118,30 +115,26 @@ let useAuth = (config, store = localStorage) => {
       if (store.getItem('pkce_state') !== query.state) {
         console.error('Invalid state');
       } else {
-        fetch(config.auth_endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: JSON.stringify({
-            code: query.code,
-            verifier: store.getItem('pkce_code_verifier'),
-          }),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`Status ${response.status}`);
+          // Exchange code for access token
+          fetch("https://student.sbhs.net.au/api/token", {
+            method: "POST",
+            body: new URLSearchParams({
+              grant_type: 'authorization_code',
+              code: query.code,
+              client_id: config.client_id,
+              redirect_uri: config.redirect_uri,
+              code_verifier: store.getItem("pkce_code_verifier"),
+            }),
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            },
+          }).then(res => {
+            if (!res.ok) {
+              throw new Error(`Error ${res.status}`)
             }
-            return response;
+            console.log(res.json())
           })
-          .then(() => {
-            store.setItem('loggedIn', 'true');
-            setLoggedIn(true);
-            setIsLoading(false);
-            setShouldLogin(false)
-          });
       }
-
       // Clean these up since we don't need them anymore
       store.removeItem('pkce_state');
       store.removeItem('pkce_code_verifier');
