@@ -67,9 +67,6 @@ export default ({ onCTAClick }) => {
     },
   ]
 
-  const durUntilNextPeriod = Duration.fromMillis(timeLeft).shiftTo("hours", "minutes", "seconds")
-  let timeUntilNextPeriod = ""
-  timeUntilNextPeriod += durUntilNextPeriod.toFormat("hh:mm:ss")
   return <>
     <Flex direction='column' align='center' maxW={{ xl: '1200px' }} m='0 auto'>
       <Nav />
@@ -82,7 +79,7 @@ export default ({ onCTAClick }) => {
           justifyContent='center'
           direction='column'
         >
-          <DailyTimetable nextPeriod={"Roll Call"} timeUntilNextPeriod={timeUntilNextPeriod} periods={fakePeriods} headingSize={"2xl"} />
+          <DailyTimetable nextPeriod={"Roll Call"} timeUntilNextPeriod={timeLeft} periods={fakePeriods} headingSize={"2xl"} />
         </Flex>
       </Hero>
     </Flex>
