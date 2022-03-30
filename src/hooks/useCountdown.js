@@ -8,7 +8,13 @@ export default (initialTime) => {
   useEffect(() => {
     const timer = setTimeout(() => {
       const then = DateTime.fromMillis(time)
-      setTimeLeft(then.diffNow().toFormat("hh:mm:ss"))
+      const dur = then.diffNow()
+
+      if (dur.toMillis() >= 60 * 60 * 1000) {
+        setTimeLeft(dur.toFormat("hh:mm:ss"))
+      } else {
+        setTimeLeft(dur.toFormat("mm:ss"))
+      }
     }, 1000)
 
     return () => clearTimeout(timer)

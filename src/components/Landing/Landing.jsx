@@ -24,7 +24,7 @@ export default ({ onCTAClick }) => {
 
   const timetableColor = useColorModeValue('gray.50', 'gray.700');
   const textColor = useColorModeValue('primary.700', 'primary.200');
-  const [timeLeft, setTime] = useCountdown(DateTime.now().plus({ hours: 2 }).toMillis())
+  const [timeLeft, setTime] = useCountdown(DateTime.now().plus({ hours: 1.001 }).toMillis())
 
   const fakePeriods = [
     {
