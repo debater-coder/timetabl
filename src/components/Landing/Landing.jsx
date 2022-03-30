@@ -24,7 +24,7 @@ export default ({ onCTAClick }) => {
 
   const timetableColor = useColorModeValue('gray.50', 'gray.700');
   const textColor = useColorModeValue('primary.700', 'primary.200');
-  const [timeLeft, setTime] = useCountdown(DateTime.now().plus({ hours: 1 }).toMillis())
+  const [timeLeft, setTime] = useCountdown(DateTime.now().plus({ hours: 2 }).toMillis())
 
   const fakePeriods = [
     {
@@ -67,6 +67,9 @@ export default ({ onCTAClick }) => {
     },
   ]
 
+  const durUntilNextPeriod = Duration.fromMillis(timeLeft).shiftTo("hours", "minutes", "seconds")
+  let timeUntilNextPeriod = ""
+  timeUntilNextPeriod += durUntilNextPeriod.toFormat("hh:mm:ss")
   return <>
     <Flex direction='column' align='center' maxW={{ xl: '1200px' }} m='0 auto'>
       <Nav />
@@ -79,7 +82,7 @@ export default ({ onCTAClick }) => {
           justifyContent='center'
           direction='column'
         >
-          <DailyTimetable nextPeriod={"Roll Call"} timeUntilNextPeriod={Duration.fromMillis(timeLeft).toFormat("h:mm:ss")} periods={fakePeriods} headingSize={"2xl"} />
+          <DailyTimetable nextPeriod={"Roll Call"} timeUntilNextPeriod={timeUntilNextPeriod} periods={fakePeriods} headingSize={"2xl"} />
         </Flex>
       </Hero>
     </Flex>
