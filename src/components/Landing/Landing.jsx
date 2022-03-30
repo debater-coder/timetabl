@@ -16,13 +16,15 @@ import React from 'react';
 import DailyTimetable from '../Main/DailyTimetable';
 import { FaGithub } from 'react-icons/fa';
 import { Student } from 'phosphor-react';
-import { DateTime } from 'luxon';
+import { DateTime, Duration } from 'luxon';
+import useCountdown from '../../hooks/useCountdown';
 
 
 export default ({ onCTAClick }) => {
 
   const timetableColor = useColorModeValue('gray.50', 'gray.700');
   const textColor = useColorModeValue('primary.700', 'primary.200');
+  const [timeLeft, setTime] = useCountdown(DateTime.now().plus({ hours: 1 }).toMillis())
 
   const fakePeriods = [
     {
@@ -77,7 +79,7 @@ export default ({ onCTAClick }) => {
           justifyContent='center'
           direction='column'
         >
-          <DailyTimetable nextPeriod={"Roll Call"} timeUntilNextPeriod={"05:00"} periods={fakePeriods} headingSize={"2xl"} />
+          <DailyTimetable nextPeriod={"Roll Call"} timeUntilNextPeriod={Duration.fromMillis(timeLeft).toFormat("h:mm:ss")} periods={fakePeriods} headingSize={"2xl"} />
         </Flex>
       </Hero>
     </Flex>
