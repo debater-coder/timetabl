@@ -24,6 +24,47 @@ export default ({ onCTAClick }) => {
   const timetableColor = useColorModeValue('gray.50', 'gray.700');
   const textColor = useColorModeValue('primary.700', 'primary.200');
 
+  const fakePeriods = [
+    {
+      subject: "Period 1",
+      time: "9:05",
+      isBreak: true,
+      isCurrent: true
+    },
+    {
+      subject: "Period 2",
+      time: "10:10",
+      isBreak: true
+    },
+    {
+      subject: "Recess",
+      time: "11:10",
+      isBreak: true,
+      supersmall: true
+    },
+    {
+      subject: "Period 3",
+      time: "11:30",
+      isBreak: true
+    },
+    {
+      subject: "Lunch",
+      time: "12:30",
+      isBreak: true,
+      supersmall: true
+    },
+    {
+      subject: "Period 4",
+      time: "13:10",
+      isBreak: true
+    },
+    {
+      subject: "Period 5",
+      time: "14:15",
+      isBreak: true
+    },
+  ]
+
   return <>
     <Flex direction='column' align='center' maxW={{ xl: '1200px' }} m='0 auto'>
       <Nav />
@@ -36,7 +77,7 @@ export default ({ onCTAClick }) => {
           justifyContent='center'
           direction='column'
         >
-
+          <DailyTimetable nextPeriod={"Roll Call"} timeUntilNextPeriod={"05:00"} periods={fakePeriods} headingSize={"2xl"} />
         </Flex>
       </Hero>
     </Flex>
