@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import contextualise from '../contextualise/src/contextualise';
 import config from '../config';
-import lodash from "lodash"
 import React from 'react';
 import { useBanner } from './useBanner';
 import { Alert, AlertIcon, AlertTitle, Button } from '@chakra-ui/react';
@@ -87,15 +86,10 @@ let useAuth = (config, store = localStorage) => {
       '&code_challenge_method=S256';
   };
 
-  const refresh = lodash.throttle(() => fetch(config.auth_endpoint, { method: 'PATCH' }), 1000)
-
   // Logout Function
   const logout = () => {
     setLoggedIn(false);
     store.removeItem('loggedIn');
-    let _ = fetch(config.auth_endpoint, {
-      method: 'DELETE',
-    });
   };
 
   /////////////////////////////////////////////////////////////////
@@ -118,30 +112,33 @@ let useAuth = (config, store = localStorage) => {
       if (store.getItem('pkce_state') !== query.state) {
         console.error('Invalid state');
       } else {
-        fetch(config.auth_endpoint, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json; charset=UTF-8',
-          },
-          body: JSON.stringify({
-            code: query.code,
-            verifier: store.getItem('pkce_code_verifier'),
-          }),
-        })
-          .then((response) => {
-            if (!response.ok) {
-              throw new Error(`Status ${response.status}`);
+          // Exchange code for access token
+          fetch("https://student.sbhs.net.au/api/token", {
+            method: "POST",
+            body: new URLSearchParams({
+              grant_type: 'authorization_code',
+              code: query.code,
+              client_id: config.client_id,
+              redirect_uri: config.redirect_uri,
+              code_verifier: store.getItem("pkce_code_verifier"),
+            }),
+            headers: {
+              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
+            },
+          }).then(res => {
+            if (!res.ok) {
+              throw new Error(`Error ${res.status}`)
             }
-            return response;
-          })
-          .then(() => {
-            store.setItem('loggedIn', 'true');
-            setLoggedIn(true);
-            setIsLoading(false);
+            return res.json()
+          }).then(data => {
+            store.setItem("access_token", data["access_token"])
+            store.setItem("refresh_token", data["refresh_token"])
+            store.setItem("loggedIn", "true")
+            setLoggedIn(true)
+            setIsLoading(false)
             setShouldLogin(false)
-          });
+          })
       }
-
       // Clean these up since we don't need them anymore
       store.removeItem('pkce_state');
       store.removeItem('pkce_code_verifier');
@@ -163,7 +160,7 @@ let useAuth = (config, store = localStorage) => {
     }
   }, [shouldLogin])
 
-  return { loggedIn, login, isLoading, logout, refresh, shouldLogIn: shouldLogin, setShouldLogin };
+  return { loggedIn, login, isLoading, logout, shouldLogIn: shouldLogin, setShouldLogin };
 };
 
 let [useAuthGlobal, AuthProvider] = contextualise(useAuth, [config], undefined);

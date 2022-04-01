@@ -1,6 +1,7 @@
 import Nav from './Nav';
 import Hero from './Hero';
 import {
+  Alert, AlertDescription, AlertIcon, AlertTitle,
   Box,
   ButtonGroup,
   chakra,
@@ -12,38 +13,134 @@ import {
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import DailyTimetable from '../Main/DailyTimetable';
 import { FaGithub } from 'react-icons/fa';
 import { Student } from 'phosphor-react';
-import { useQuery } from 'urql';
-import { DateTime } from 'luxon';
+import { DateTime, Duration } from 'luxon';
+import useCountdown from '../../hooks/useCountdown';
+import { useQuery } from 'react-query';
 
-// language=GraphQL
-const query = `
-  query {
-      bells(date: "2021-08-30") {
-          bells {
-              bell
-              time
-          }
+const fetch_bells = () => fetch("https://student.sbhs.net.au/api/timetable/bells.json")
+  .then((res) => {
+    if (!res.ok) {
+      throw Error("Oh dear!")
+    }
+    return res
+  })
+  .then(res => res.json())
+
+const LandingTimetable = () => {
+  const [timeLeft, setTime] = useCountdown(DateTime.now().plus({"hours": 1.001}).toMillis())
+
+  const { status, data, error } = useQuery("bells", fetch_bells)
+
+  useEffect(() => {
+    if (status === "success") {
+      let nextPeriod
+      for (const period of periods) {
+        const periodTime = DateTime.fromISO(data.date + "T" + period.time)
+        const now = DateTime.now()
+        if (now < periodTime) {
+          nextPeriod = period
+          break
+        }
       }
+
+      setTime(DateTime.fromISO(data.date + "T" + nextPeriod.time).toMillis())
+    }
+
+  }, [data])
+
+  if (status === "loading") {
+    return <Spinner />
   }
-`
+
+  if (status === "error") {
+    return <Alert status='error'>
+      <AlertIcon />
+      <AlertTitle mr={2}>Error</AlertTitle>
+      <AlertDescription>{error.message}</AlertDescription>
+    </Alert>
+  }
+
+  let periods = data.bells.filter(bell => DateTime.fromISO(bell.time) >= DateTime.fromISO("09:00")).map(
+    bell => ({
+      subject: bell.bell.length === 1 ? `Period ${bell.bell}` : bell.bell,
+      isBreak: true,
+      time: bell.time
+    })
+  )
+
+  // Sort the periods
+  periods.sort((a, b) => {
+    return +DateTime.fromISO(a) - +DateTime.fromISO(b)
+  })
+
+
+  let nextPeriod
+  for (const period of periods) {
+    const periodTime = DateTime.fromISO(data.date + "T" + period.time)
+    const now = DateTime.now()
+    if (now < periodTime) {
+      nextPeriod = period
+      break
+    }
+  }
+
+  return <DailyTimetable
+    nextPeriod={nextPeriod.subject}
+    timeUntilNextPeriod={timeLeft}
+    periods={periods}
+    headingSize={"2xl"}
+  />
+}
 
 export default ({ onCTAClick }) => {
 
   const timetableColor = useColorModeValue('gray.50', 'gray.700');
   const textColor = useColorModeValue('primary.700', 'primary.200');
-  const [result, reexecuteQuery] = useQuery({
-    query,
-  })
 
-  const {data, fetching, error} = result;
-  if (error) console.error(error)
-
-  let testing = false;
-  testing = true; // Remove after testing
+  // const fakePeriods = [
+  //   {
+  //     subject: "Period 1",
+  //     time: "9:05",
+  //     isBreak: true,
+  //     isCurrent: true
+  //   },
+  //   {
+  //     subject: "Period 2",
+  //     time: "10:10",
+  //     isBreak: true
+  //   },
+  //   {
+  //     subject: "Recess",
+  //     time: "11:10",
+  //     isBreak: true,
+  //     supersmall: true
+  //   },
+  //   {
+  //     subject: "Period 3",
+  //     time: "11:30",
+  //     isBreak: true
+  //   },
+  //   {
+  //     subject: "Lunch",
+  //     time: "12:30",
+  //     isBreak: true,
+  //     supersmall: true
+  //   },
+  //   {
+  //     subject: "Period 4",
+  //     time: "13:10",
+  //     isBreak: true
+  //   },
+  //   {
+  //     subject: "Period 5",
+  //     time: "14:15",
+  //     isBreak: true
+  //   },
+  // ]
 
   return <>
     <Flex direction='column' align='center' maxW={{ xl: '1200px' }} m='0 auto'>
@@ -57,31 +154,7 @@ export default ({ onCTAClick }) => {
           justifyContent='center'
           direction='column'
         >
-          {
-            fetching || testing ?
-            <Spinner />
-            :
-            <DailyTimetable
-              nextPeriod={'Roll call'}
-              timeUntilNextPeriod={'00:05:00'}
-              periods={
-                data.bells.bells.filter(bell => DateTime.fromISO(bell.time) >= DateTime.fromISO("09:00")).map(
-                  bell => {
-                    let subject = bell.bell
-                    let time = bell.time
-                    if (subject.length === 1) {
-                      subject = `Period ${subject}`
-                    }
-                    return {
-                      subject,
-                      time,
-                      isBreak: true
-                    }
-                  }
-                )
-              }
-              headingSize={'2xl'} />
-          }
+          <LandingTimetable />
         </Flex>
       </Hero>
     </Flex>

@@ -1,3 +1,0 @@
-[dev]
-    command = "npm start"
-    targetPort = 8080
