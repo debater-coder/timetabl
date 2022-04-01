@@ -35,6 +35,23 @@ const LandingTimetable = () => {
 
   const { status, data, error } = useQuery("bells", fetch_bells)
 
+  useEffect(() => {
+    if (status === "success") {
+      let nextPeriod
+      for (const period of periods) {
+        const periodTime = DateTime.fromISO(data.date + "T" + period.time)
+        const now = DateTime.now()
+        if (now < periodTime) {
+          nextPeriod = period
+          break
+        }
+      }
+
+      setTime(DateTime.fromISO(data.date + "T" + nextPeriod.time).toMillis())
+    }
+
+  }, [data])
+
   if (status === "loading") {
     return <Spinner />
   }
@@ -47,12 +64,11 @@ const LandingTimetable = () => {
     </Alert>
   }
 
-  let periods = data.bells.map(
+  let periods = data.bells.filter(bell => DateTime.fromISO(bell.time) >= DateTime.fromISO("09:00")).map(
     bell => ({
-      subject: bell.bell,
+      subject: bell.bell.length === 1 ? `Period ${bell.bell}` : bell.bell,
       isBreak: true,
-      time: bell.time,
-      supersmall: bell.type === "R"
+      time: bell.time
     })
   )
 
@@ -61,8 +77,19 @@ const LandingTimetable = () => {
     return +DateTime.fromISO(a) - +DateTime.fromISO(b)
   })
 
+
+  let nextPeriod
+  for (const period of periods) {
+    const periodTime = DateTime.fromISO(data.date + "T" + period.time)
+    const now = DateTime.now()
+    if (now < periodTime) {
+      nextPeriod = period
+      break
+    }
+  }
+
   return <DailyTimetable
-    nextPeriod={"Roll Call"}
+    nextPeriod={nextPeriod.subject}
     timeUntilNextPeriod={timeLeft}
     periods={periods}
     headingSize={"2xl"}
