@@ -21,7 +21,7 @@ export default ({ subject, time, teacher, room, isCurrent, isBreak, roomChanged,
       mr={10}
       fontSize={'md'}
     >
-      <Text fontSize={supersmall ? "md" : undefined}>{subject}</Text>
+      <Text fontSize={supersmall ? "sm" : undefined}>{subject}</Text>
       {
         !isBreak
           ?
