@@ -79,11 +79,16 @@ const LandingTimetable = () => {
 
 
   let nextPeriod
-  for (const period of periods) {
+  for (const [index, period] of periods.entries()) {
     const periodTime = DateTime.fromISO(data.date + "T" + period.time)
     const now = DateTime.now()
     if (now < periodTime) {
       nextPeriod = period
+      if (index > 0) {
+        periods[index - 1].isCurrent = true
+      } else {
+        periods[index].isCurrent = true
+      }
       break
     }
   }
