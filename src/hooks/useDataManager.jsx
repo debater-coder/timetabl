@@ -21,6 +21,9 @@ const useDataManager = () => {
   const [data, setData] = useImmer({
     name: null,
     studentID: null,
+    email: null,
+    role: null,
+    department: null,
     serverTimezone: 36000,
     periods: [
       {
@@ -82,12 +85,13 @@ const useDataManager = () => {
         setData(draft => {
           draft.name = raw["givenName"] + " " + raw["surname"]
           draft.studentID = raw["studentId"]
+          draft.email = raw["email"]
+          draft.role = raw["role"]
+          draft.department = raw["department"]
         })
       }
     }, [status]
   )
-
-  console.log(data)
 
   return data;
 };
