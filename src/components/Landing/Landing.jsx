@@ -31,9 +31,16 @@ const fetch_bells = () => fetch("https://student.sbhs.net.au/api/timetable/bells
   .then(res => res.json())
 
 const LandingTimetable = () => {
-  const [timeLeft, setTime] = useCountdown(DateTime.now().plus({"hours": 1.001}).toMillis())
-
   const { status, data, error } = useQuery("bells", fetch_bells)
+
+  const [timeLeft, setTime] = useCountdown(
+    DateTime.now().plus({"hours": 0}).toMillis(),
+    () => {
+      if (status === "success") {
+        setTime(DateTime.fromISO(data.date + "T" + nextPeriod.time).toMillis())
+      }
+    }
+  )
 
   useEffect(() => {
     if (status === "success") {
@@ -93,12 +100,15 @@ const LandingTimetable = () => {
     }
   }
 
-  return <DailyTimetable
-    nextPeriod={nextPeriod.subject}
-    timeUntilNextPeriod={timeLeft}
-    periods={periods}
-    headingSize={"2xl"}
-  />
+  return <>
+    <Text fontWeight={"bold"}>{data.day}{" "}{data.week}{data.weekType}</Text>
+      <DailyTimetable
+        nextPeriod={nextPeriod.subject}
+        timeUntilNextPeriod={timeLeft}
+        periods={periods}
+        headingSize={"2xl"}
+      />
+  </>
 }
 
 export default ({ onCTAClick }) => {

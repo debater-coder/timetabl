@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { DateTime } from 'luxon';
 
-export default (initialTime) => {
+export default (initialTime, callback) => {
   const [timeLeft, setTimeLeft] = useState("")
   const [time, setTime] = useState(initialTime)
 
@@ -15,6 +15,7 @@ export default (initialTime) => {
       } else {
         setTimeLeft(dur.toFormat("mm:ss"))
       }
+      callback()
     }, 1000)
 
     return () => clearTimeout(timer)
