@@ -1,7 +1,7 @@
 import contextualise from '../contextualise/src/contextualise';
 import { useImmer } from 'use-immer';
 import { useAuth } from './useAuth';
-import React, { useEffect } from 'react';
+import React from 'react';
 
 const useDataManager = () => {
   const [data, setData] = useImmer({
@@ -63,7 +63,7 @@ const useDataManager = () => {
   const { loggedIn, login, isLoading, setShouldLogin } = useAuth();
 
 
-  return data
+  return data;
 };
 
 let [useDataManagerGlobal, DataProvider] = contextualise(useDataManager, [], undefined);

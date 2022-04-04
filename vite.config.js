@@ -1,5 +1,5 @@
-import { defineConfig } from 'vite'
-import reactRefresh from '@vitejs/plugin-react-refresh'
+import { defineConfig } from 'vite';
+import reactRefresh from '@vitejs/plugin-react-refresh';
 
 // https://vitejs.dev/config/
 export default defineConfig({
@@ -9,9 +9,9 @@ export default defineConfig({
     outDir: 'build',
   },
   plugins: [
-    reactRefresh()
+    reactRefresh(),
   ],
   server: {
-    open: true
-  }
-})
+    open: true,
+  },
+});

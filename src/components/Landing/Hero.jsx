@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Button, Flex, Heading, Link, Stack, Text, useColorModeValue } from '@chakra-ui/react';
+import { Box, Button, Flex, Heading, Link, Stack, useColorModeValue } from '@chakra-ui/react';
 
 export default props => {
   const textColor = useColorModeValue('primary.800', 'primary.100');
@@ -59,7 +59,7 @@ export default props => {
         textAlign='center'
         color={textColor}
         opacity='0.6'
-        href={"https://github.com/debater-coder/timetabl"}
+        href={'https://github.com/debater-coder/timetabl'}
       >
         Free and open source
       </Link>

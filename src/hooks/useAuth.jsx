@@ -1,7 +1,6 @@
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import contextualise from '../contextualise/src/contextualise';
 import config from '../config';
-import React from 'react';
 import { useBanner } from './useBanner';
 import { Alert, AlertIcon, AlertTitle, Button } from '@chakra-ui/react';
 
@@ -9,7 +8,7 @@ let useAuth = (config, store = localStorage) => {
   const [loggedIn, setLoggedIn] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [shouldLogin, setShouldLogin] = useState(false);
-  const {banner, setBanner} = useBanner()
+  const { banner, setBanner } = useBanner();
 
 
   /////////////////////////////////////////////////////////////////////
@@ -112,32 +111,32 @@ let useAuth = (config, store = localStorage) => {
       if (store.getItem('pkce_state') !== query.state) {
         console.error('Invalid state');
       } else {
-          // Exchange code for access token
-          fetch("https://student.sbhs.net.au/api/token", {
-            method: "POST",
-            body: new URLSearchParams({
-              grant_type: 'authorization_code',
-              code: query.code,
-              client_id: config.client_id,
-              redirect_uri: config.redirect_uri,
-              code_verifier: store.getItem("pkce_code_verifier"),
-            }),
-            headers: {
-              'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8'
-            },
-          }).then(res => {
-            if (!res.ok) {
-              throw new Error(`Error ${res.status}`)
-            }
-            return res.json()
-          }).then(data => {
-            store.setItem("access_token", data["access_token"])
-            store.setItem("refresh_token", data["refresh_token"])
-            store.setItem("loggedIn", "true")
-            setLoggedIn(true)
-            setIsLoading(false)
-            setShouldLogin(false)
-          })
+        // Exchange code for access token
+        fetch('https://student.sbhs.net.au/api/token', {
+          method: 'POST',
+          body: new URLSearchParams({
+            grant_type: 'authorization_code',
+            code: query.code,
+            client_id: config.client_id,
+            redirect_uri: config.redirect_uri,
+            code_verifier: store.getItem('pkce_code_verifier'),
+          }),
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+          },
+        }).then(res => {
+          if (!res.ok) {
+            throw new Error(`Error ${res.status}`);
+          }
+          return res.json();
+        }).then(data => {
+          store.setItem('access_token', data['access_token']);
+          store.setItem('refresh_token', data['refresh_token']);
+          store.setItem('loggedIn', 'true');
+          setLoggedIn(true);
+          setIsLoading(false);
+          setShouldLogin(false);
+        });
       }
       // Clean these up since we don't need them anymore
       store.removeItem('pkce_state');
@@ -147,7 +146,7 @@ let useAuth = (config, store = localStorage) => {
       setIsLoading(false);
     } else {
       setLoggedIn(false);
-      setShouldLogin(false)
+      setShouldLogin(false);
       setIsLoading(false);
     }
   }, []);
@@ -155,10 +154,11 @@ let useAuth = (config, store = localStorage) => {
   useEffect(() => {
     if (shouldLogin) {
       setBanner(
-        <Alert status={"warning"} rounded={5} variant={"left-accent"}><AlertIcon /><AlertTitle>Log in to see the latest information.</AlertTitle><Button onClick={login}>Log in</Button></Alert>
-      )
+        <Alert status={'warning'} rounded={5} variant={'left-accent'}><AlertIcon /><AlertTitle>Log in to see the latest
+          information.</AlertTitle><Button onClick={login}>Log in</Button></Alert>,
+      );
     }
-  }, [shouldLogin])
+  }, [shouldLogin]);
 
   return { loggedIn, login, isLoading, logout, shouldLogIn: shouldLogin, setShouldLogin };
 };
