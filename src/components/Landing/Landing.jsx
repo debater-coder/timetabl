@@ -101,7 +101,7 @@ const LandingTimetable = () => {
   }
 
   return <>
-    <Text fontWeight={"bold"}>{data.day}{" "}{data.weekType}</Text>
+    <Text fontWeight={"bold"}>{data.day}{" "}{data.week}{data.weekType}</Text>
       <DailyTimetable
         nextPeriod={nextPeriod.subject}
         timeUntilNextPeriod={timeLeft}
