@@ -1,7 +1,21 @@
 import contextualise from '../contextualise/src/contextualise';
 import { useImmer } from 'use-immer';
 import { useAuth } from './useAuth';
-import React from 'react';
+import React, { useMemo } from 'react';
+import { useQuery } from 'react-query';
+
+const fetchPortalAuthenticated = ({ queryKey }) => fetch(
+  "https://student.sbhs.net.au/api/"
+  + queryKey[1] + "?access_token="
+  + localStorage.getItem("access_token")
+)
+  .then((res) => {
+    if (!res.ok) {
+      throw Error('Error fetching bells');
+    }
+    return res;
+  })
+  .then(res => res.json());
 
 const useDataManager = () => {
   const [data, setData] = useImmer({
@@ -60,8 +74,20 @@ const useDataManager = () => {
     shouldDisplayVariations: true,
   });
 
-  const { loggedIn, login, isLoading, setShouldLogin } = useAuth();
+  const {status, data: raw, error} = useQuery(["portal", "details/userinfo.json"], fetchPortalAuthenticated )
 
+  useMemo(
+    () => {
+      if (status === "success") {
+        setData(draft => {
+          draft.name = raw["givenName"] + " " + raw["surname"]
+          draft.studentID = raw["studentId"]
+        })
+      }
+    }, [status]
+  )
+
+  console.log(data)
 
   return data;
 };
