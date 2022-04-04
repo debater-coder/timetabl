@@ -3,8 +3,8 @@ import React, { useState } from 'react';
 
 const useBanner = () => {
   const [banner, setBanner] = useState(<></>);
-  return {banner, setBanner}
-}
+  return { banner, setBanner };
+};
 
 let [useBannerGlobal, BannerProvider] = contextualise(useBanner, [], undefined);
 

@@ -1,7 +1,18 @@
 import { chakra, Flex, Text, useToken } from '@chakra-ui/react';
 import React from 'react';
 
-export default ({ subject, time, teacher, room, isCurrent, isBreak, roomChanged, teacherChanged, timeChanged, supersmall=false}) => {
+export default ({
+                  subject,
+                  time,
+                  teacher,
+                  room,
+                  isCurrent,
+                  isBreak,
+                  roomChanged,
+                  teacherChanged,
+                  timeChanged,
+                  supersmall = false,
+                }) => {
   const [primary] = useToken('colors', ['primary.100']);
 
   return <Flex
@@ -21,7 +32,7 @@ export default ({ subject, time, teacher, room, isCurrent, isBreak, roomChanged,
       mr={10}
       fontSize={'md'}
     >
-      <Text fontSize={supersmall ? "sm" : undefined}>{subject}</Text>
+      <Text fontSize={supersmall ? 'sm' : undefined}>{subject}</Text>
       {
         !isBreak
           ?
@@ -35,7 +46,7 @@ export default ({ subject, time, teacher, room, isCurrent, isBreak, roomChanged,
           <></>
       }
     </Flex>
-    <Flex fontSize={supersmall ? "l" : (isBreak ? 'xl' : '2xl')} textAlign={'right'}>
+    <Flex fontSize={supersmall ? 'l' : (isBreak ? 'xl' : '2xl')} textAlign={'right'}>
       {
         isBreak
           ?

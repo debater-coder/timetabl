@@ -1,4 +1,4 @@
-import { Badge, Flex, IconButton, Link, Spacer, Text, useColorMode, useColorModeValue } from '@chakra-ui/react';
+import { Badge, Flex, IconButton, Link, Spacer, useColorMode, useColorModeValue } from '@chakra-ui/react';
 import { FaGithub, FaMoon, FaSun } from 'react-icons/all';
 import React from 'react';
 
@@ -19,10 +19,11 @@ export default () => {
     bg={'transparent'}
     color={textColor}
   >
-    <Link fontWeight='medium' href={"/"}>Timetabl</Link>&nbsp;<Badge colorScheme={"teal"} variant={"subtle"} >Alpha</Badge>
+    <Link fontWeight='medium' href={'/'}>Timetabl</Link>&nbsp;<Badge colorScheme={'teal'}
+                                                                     variant={'subtle'}>Alpha</Badge>
     <Spacer />
     <Flex>
-      <IconButton onClick={toggleColorMode} aria-label='Dark mode' color={iconColor} icon={icon} mr={1}/>
+      <IconButton onClick={toggleColorMode} aria-label='Dark mode' color={iconColor} icon={icon} mr={1} />
       <a href='https://github.com/debater-coder/timetabl'>
         <IconButton color={iconColor} icon={<FaGithub />} aria-label='Github Repository' />
       </a>

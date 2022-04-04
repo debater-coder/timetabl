@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Box, chakra, Flex, Icon, Spinner, Tooltip } from '@chakra-ui/react';
 import { useBarcode } from 'react-barcodes';
 import { Barcode as PhosphorBarcode, CaretDown as PhosphorCaretDown } from 'phosphor-react';
@@ -17,7 +17,7 @@ export default () => {
       displayValue: false,
       background: '#ffffff',
     },
-  })
+  });
   const { ref: scrollRef, inView } = useInView({ threshold: 0.5 });
 
   return <Flex direction={'column'} align={'center'}>
@@ -25,11 +25,13 @@ export default () => {
     <Tooltip label={'You can use this barcode to scan in'} closeOnClick={false}>
       <Icon boxSize={7} mb={3} mt={5} />
     </Tooltip>
-      <Box borderRadius={5} p={2} bg={studentID !== null ? 'white' : "transparent"} ref={scrollRef}>
-          <Box display={studentID === null ? "none" : "block"}><canvas ref={barcodeRef} /></Box>
-          {studentID === null ? <Spinner /> : <></>}
+    <Box borderRadius={5} p={2} bg={studentID !== null ? 'white' : 'transparent'} ref={scrollRef}>
+      <Box display={studentID === null ? 'none' : 'block'}>
+        <canvas ref={barcodeRef} />
       </Box>
-    {inView || studentID === null  ? <></> : <Flex
+      {studentID === null ? <Spinner /> : <></>}
+    </Box>
+    {inView || studentID === null ? <></> : <Flex
       direction={'column'}
       bg={'white'}
       h={'60px'}

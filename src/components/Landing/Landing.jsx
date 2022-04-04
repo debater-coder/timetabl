@@ -1,115 +1,21 @@
 import Nav from './Nav';
 import Hero from './Hero';
 import {
-  Alert, AlertDescription, AlertIcon, AlertTitle,
   Box,
   ButtonGroup,
-  chakra,
   Divider,
   Flex,
   IconButton,
-  Image, Link, Spinner,
+  Image,
+  Link,
   Stack,
   Text,
   useColorModeValue,
 } from '@chakra-ui/react';
-import React, { useEffect, useMemo } from 'react';
-import DailyTimetable from '../Main/DailyTimetable';
+import React from 'react';
 import { FaGithub } from 'react-icons/fa';
 import { Student } from 'phosphor-react';
-import { DateTime, Duration } from 'luxon';
-import useCountdown from '../../hooks/useCountdown';
-import { useQuery } from 'react-query';
-
-const fetch_bells = () => fetch("https://student.sbhs.net.au/api/timetable/bells.json")
-  .then((res) => {
-    if (!res.ok) {
-      throw Error("Oh dear!")
-    }
-    return res
-  })
-  .then(res => res.json())
-
-const LandingTimetable = () => {
-  const { status, data, error } = useQuery("bells", fetch_bells)
-
-  const [timeLeft, setTime] = useCountdown(
-    DateTime.now().plus({"hours": 0}).toMillis(),
-    () => {
-      if (status === "success") {
-        setTime(DateTime.fromISO(data.date + "T" + nextPeriod.time).toMillis())
-      }
-    }
-  )
-
-  useEffect(() => {
-    if (status === "success") {
-      let nextPeriod
-      for (const period of periods) {
-        const periodTime = DateTime.fromISO(data.date + "T" + period.time)
-        const now = DateTime.now()
-        if (now < periodTime) {
-          nextPeriod = period
-          break
-        }
-      }
-
-      setTime(DateTime.fromISO(data.date + "T" + nextPeriod.time).toMillis())
-    }
-
-  }, [data])
-
-  if (status === "loading") {
-    return <Spinner />
-  }
-
-  if (status === "error") {
-    return <Alert status='error'>
-      <AlertIcon />
-      <AlertTitle mr={2}>Error</AlertTitle>
-      <AlertDescription>{error.message}</AlertDescription>
-    </Alert>
-  }
-
-  let periods = data.bells.filter(bell => DateTime.fromISO(bell.time) >= DateTime.fromISO("09:00")).map(
-    bell => ({
-      subject: bell.bell.length === 1 ? `Period ${bell.bell}` : bell.bell,
-      isBreak: true,
-      time: bell.time
-    })
-  )
-
-  // Sort the periods
-  periods.sort((a, b) => {
-    return +DateTime.fromISO(a) - +DateTime.fromISO(b)
-  })
-
-
-  let nextPeriod
-  for (const [index, period] of periods.entries()) {
-    const periodTime = DateTime.fromISO(data.date + "T" + period.time)
-    const now = DateTime.now()
-    if (now < periodTime) {
-      nextPeriod = period
-      if (index > 0) {
-        periods[index - 1].isCurrent = true
-      } else {
-        periods[index].isCurrent = true
-      }
-      break
-    }
-  }
-
-  return <>
-    <Text fontWeight={"bold"}>{data.day}{" "}{data.week}{data.weekType}</Text>
-      <DailyTimetable
-        nextPeriod={nextPeriod.subject}
-        timeUntilNextPeriod={timeLeft}
-        periods={periods}
-        headingSize={"2xl"}
-      />
-  </>
-}
+import LandingTimetable from './LandingTimetable';
 
 export default ({ onCTAClick }) => {
 
@@ -205,7 +111,7 @@ export default ({ onCTAClick }) => {
             color={textColor}
             fontWeight={'medium'}
             display={'inline'}
-            href={"/"}
+            href={'/'}
           >Timetabl
           </Link>
           &nbsp;is made by Hamzah Ahmed
