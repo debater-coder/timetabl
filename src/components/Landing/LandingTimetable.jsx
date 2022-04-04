@@ -8,7 +8,7 @@ import React, { useMemo } from 'react';
 const fetch_bells = () => fetch('https://student.sbhs.net.au/api/timetable/bells.json')
   .then((res) => {
     if (!res.ok) {
-      throw Error('Oh dear!');
+      throw Error('Error fetching bells');
     }
     return res;
   })
