@@ -3,23 +3,28 @@ import { useImmer } from 'use-immer';
 import { useAuth } from './useAuth';
 import React, { useMemo } from 'react';
 import { useQuery } from 'react-query';
+import { useBanner } from './useBanner';
+import { Alert, AlertDescription, AlertIcon, AlertTitle, Button } from '@chakra-ui/react';
 
-const fetchPortalAuthenticated = ({ queryKey }) => fetch(
-  "https://student.sbhs.net.au/api/"
-  + queryKey[1] + "?access_token="
-  + localStorage.getItem("access_token")
-)
-  .then((res) => {
-    if (res.status === 401) {
-      throw Error("401")
-    }
+const fetchPortalAuthenticated = async ({ queryKey }) => {
+  const res = await fetch(
+    "https://student.sbhs.net.au/api/"
+    + queryKey[1]
+    + "?access_token="
+    + localStorage.getItem("access_token")
+  )
 
-    if (!res.ok) {
-      throw Error('Error fetching bells');
-    }
-    return res;
-  })
-  .then(res => res.json());
+  if (res.status === 401) {
+    throw new Error("401")
+  }
+
+  if (!res.ok) {
+    const message = `An error has occured: ${res.status}`;
+    throw new Error(message);
+  }
+
+  return await res.json()
+}
 
 const useDataManager = () => {
   const [data, setData] = useImmer({
@@ -81,13 +86,15 @@ const useDataManager = () => {
     shouldDisplayVariations: true,
   });
 
-  const {status, data: raw, error} = useQuery(["portal", "details/userinfo.json"], fetchPortalAuthenticated )
+  const {status, data: raw, error} = useQuery(["portal", "details/userinfo.json"], fetchPortalAuthenticated)
+  const {setBanner} = useBanner()
   const {setShouldLogin} = useAuth()
 
   useMemo(
     () => {
       if (status === "success") {
         setData(draft => {
+          // noinspection JSValidateTypes
           draft.name = raw["givenName"] + " " + raw["surname"]
           draft.studentID = raw["studentId"]
           draft.email = raw["email"]
@@ -95,14 +102,25 @@ const useDataManager = () => {
           draft.department = raw["department"]
         })
       }
-    }, [status]
-  )
+      if (status === "error") {
 
-  if (status === "error") {
-    if (error.message === "401") {
-      setShouldLogin(true)
-    }
-  }
+        if (error.message === "401") {
+          setShouldLogin(true)
+        } else {
+          setBanner(
+            <Alert status={'error'} rounded={5} variant={'left-accent'}>
+              <AlertIcon />
+              <AlertTitle>An error occured while fetching details/userinfo.json.</AlertTitle>
+              <AlertDescription>
+                Error message: {error.message}
+              </AlertDescription>
+            </Alert>
+          )
+        }
+
+      }
+    }, [status, data, error]
+  )
 
   return data;
 };
