@@ -154,8 +154,13 @@ let useAuth = (config, store = localStorage) => {
   useEffect(() => {
     if (shouldLogin) {
       setBanner(
-        <Alert status={'warning'} rounded={5} variant={'left-accent'}><AlertIcon /><AlertTitle>Log in to see the latest
-          information.</AlertTitle><Button onClick={login}>Log in</Button></Alert>,
+        <Alert status={'warning'} rounded={5} variant={'left-accent'}>
+          <AlertIcon />
+          <AlertTitle>Log in to see the latest information.</AlertTitle>
+          <Button onClick={login}>
+            Log in
+          </Button>
+        </Alert>,
       );
     }
   }, [shouldLogin]);

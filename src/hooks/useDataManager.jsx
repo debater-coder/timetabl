@@ -10,6 +10,10 @@ const fetchPortalAuthenticated = ({ queryKey }) => fetch(
   + localStorage.getItem("access_token")
 )
   .then((res) => {
+    if (res.status === 401) {
+      throw Error("401")
+    }
+
     if (!res.ok) {
       throw Error('Error fetching bells');
     }
@@ -78,6 +82,7 @@ const useDataManager = () => {
   });
 
   const {status, data: raw, error} = useQuery(["portal", "details/userinfo.json"], fetchPortalAuthenticated )
+  const {setShouldLogin} = useAuth()
 
   useMemo(
     () => {
@@ -92,6 +97,12 @@ const useDataManager = () => {
       }
     }, [status]
   )
+
+  if (status === "error") {
+    if (error.message === "401") {
+      setShouldLogin(true)
+    }
+  }
 
   return data;
 };
