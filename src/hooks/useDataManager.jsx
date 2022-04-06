@@ -26,6 +26,20 @@ const fetchPortalAuthenticated = async ({ queryKey }) => {
   return await res.json()
 }
 
+const queryPortalAuthenticated = (endpoint, successCallback, failureCallback) => {
+  const {status, data: raw, error} = useQuery(["portal", endpoint], fetchPortalAuthenticated)
+
+  useMemo(
+    () => {
+      if (status === "success") {
+        successCallback(raw)
+      } else if (status === "error") {
+        failureCallback(error)
+      }
+    }, [status, raw, error]
+  )
+}
+
 const useDataManager = () => {
   const [data, setData] = useImmer({
     name: null,
@@ -34,6 +48,9 @@ const useDataManager = () => {
     role: null,
     department: null,
     serverTimezone: 36000,
+    week: null,
+    weekType: null,
+    term: null,
     periods: [
       {
         subject: 'Geography',
@@ -85,25 +102,22 @@ const useDataManager = () => {
     ],
     shouldDisplayVariations: true,
   });
-
-  const {status, data: raw, error} = useQuery(["portal", "details/userinfo.json"], fetchPortalAuthenticated)
   const {setBanner} = useBanner()
   const {setShouldLogin} = useAuth()
 
-  useMemo(
-    () => {
-      if (status === "success") {
-        setData(draft => {
-          // noinspection JSValidateTypes
-          draft.name = raw["givenName"] + " " + raw["surname"]
-          draft.studentID = raw["studentId"]
-          draft.email = raw["email"]
-          draft.role = raw["role"]
-          draft.department = raw["department"]
-        })
-      }
-      if (status === "error") {
-
+  // User info
+  queryPortalAuthenticated(
+    "timetable/userinfo.json",
+    (raw) => {
+      setData( draft => {
+        // noinspection JSValidateTypes
+        draft.name = raw["givenName"] + " " + raw["surname"]
+        draft.studentID = raw["studentId"]
+        draft.email = raw["email"]
+        draft.role = raw["role"]
+        draft.department = raw["department"]
+      })},
+      error => {
         if (error.message === "401") {
           setShouldLogin(true)
         } else {
@@ -117,9 +131,36 @@ const useDataManager = () => {
             </Alert>
           )
         }
-
       }
-    }, [status, data, error]
+  )
+
+  // Day Timetable
+  queryPortalAuthenticated(
+    "timetable/daytimetable.json",
+    (raw) => {
+      setData( draft => {
+        // noinspection JSValidateTypes
+        draft.name = raw["givenName"] + " " + raw["surname"]
+        draft.studentID = raw["studentId"]
+        draft.email = raw["email"]
+        draft.role = raw["role"]
+        draft.department = raw["department"]
+      })},
+    error => {
+      if (error.message === "401") {
+        setShouldLogin(true)
+      } else {
+        setBanner(
+          <Alert status={'error'} rounded={5} variant={'left-accent'}>
+            <AlertIcon />
+            <AlertTitle>An error occured while fetching details/userinfo.json.</AlertTitle>
+            <AlertDescription>
+              Error message: {error.message}
+            </AlertDescription>
+          </Alert>
+        )
+      }
+    }
   )
 
   return data;
