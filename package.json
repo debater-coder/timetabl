@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/debater-coder/timetabl/issues"
   },
-  "homepage": "https://github.com/debater-coder/timetabl#readme"
+  "homepage": "https://github.com/debater-coder/timetabl#readme",
+  "workspaces": [
+    "packages\\app"
+  ]
 }
