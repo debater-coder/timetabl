@@ -19,13 +19,29 @@ export default () => {
   const { name, studentID, email, role, department } = useDataManager();
 
   return <Flex direction={{ base: 'column', md: 'row' }} width={'100%'} height={'100%'}>
-    <Flex width={{ base: '100%', md: '30%' }} height={{ base: '30%', md: '100%' }} direction={"column"} align={"left"}>
-      <Avatar name={name} bg={'primary.100'}
-              size={'2xl'} mb={2}/>
-      <Text textAlign={"left"}>{name}</Text>
+    <Flex
+      width={{ base: '100%', md: '30%' }}
+      height={{ base: '30%', md: '100%' }}
+      direction={"column"}
+      align={"center"}
+    >
+      <Avatar
+        name={name}
+        bg={'primary.100'}
+        size={'2xl'}
+        mb={2}
+      />
+      <Text
+        textAlign={"center"}
+      >
+        {name}
+      </Text>
     </Flex>
-    <Flex width={'100%'} height={'100%'}>
-      <TableContainer>
+    <Flex
+      width={'100%'}
+      height={'100%'}
+    >
+      <TableContainer ml={"auto"} mr={"auto"}>
         <Table variant='simple'>
           <Tbody>
             <Tr>
