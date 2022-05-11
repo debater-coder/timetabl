@@ -1,0 +1,19 @@
+{
+  "name": "timetabl",
+  "version": "1.0.0",
+  "description": "Organise your school routine with Timetabl.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/debater-coder/timetabl.git"
+  },
+  "author": "Hamzah Ahmed",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/debater-coder/timetabl/issues"
+  },
+  "homepage": "https://github.com/debater-coder/timetabl#readme"
+}
