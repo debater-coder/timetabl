@@ -21,7 +21,7 @@ export default () => {
   const { logout } = useAuth();
   const { toggleColorMode } = useColorMode();
   const { banner, setBanner } = useBanner();
-  const { name, week, weekType, term } = useDataManager();
+  const { name, week, weekType, term, day } = useDataManager();
   const isMobile = useBreakpointValue({ base: '', md: 'notMobile' }) !== 'notMobile';
   const [prompt, setPrompt] = useState();
   const [installed, setInstalled] = useState(false);
@@ -50,7 +50,7 @@ export default () => {
 
   return <Flex direction={'column'} w={'100%'}>
     <Flex w={'100%'} justify={'space-between'} align={'center'} p={'10px'}>
-      <Heading size={'sm'}>Term {term} Week {week}{weekType}</Heading>
+      <Heading size={'sm'}>{day ? `${day},` : ""} {term ? `Term ${term}` : ""} {week || weekType ? `Week ${week} ${weekType}` : ""}</Heading>
       {isMobile ? <></> : <Flex>{banner}</Flex>}
       <Flex>
         {

@@ -6,28 +6,8 @@ import { useQuery } from 'react-query';
 import { useBanner } from './useBanner';
 import { Alert, AlertDescription, AlertIcon, AlertTitle, Button } from '@chakra-ui/react';
 
-const fetchPortalAuthenticated = async ({ queryKey }) => {
-  const res = await fetch(
-    "https://student.sbhs.net.au/api/"
-    + queryKey[1]
-    + "?access_token="
-    + localStorage.getItem("access_token")
-  )
-
-  if (res.status === 401) {
-    throw new Error("401")
-  }
-
-  if (!res.ok) {
-    const message = `An error has occured: ${res.status}`;
-    throw new Error(message);
-  }
-
-  return await res.json()
-}
-
 const queryPortalAuthenticated = (endpoint, successCallback, failureCallback) => {
-  const {status, data: raw, error} = useQuery(["portal", endpoint], fetchPortalAuthenticated)
+  const {status, data: raw, error} = useQuery(["portal", endpoint])
 
   useMemo(
     () => {
@@ -51,6 +31,7 @@ const useDataManager = () => {
     week: null,
     weekType: null,
     term: null,
+    day: null,
     periods: [
       {
         subject: 'Geography',
@@ -105,62 +86,40 @@ const useDataManager = () => {
   const {setBanner} = useBanner()
   const {setShouldLogin} = useAuth()
 
+  const failureCallback = error => {
+    if (error.message === "401") {
+      setShouldLogin(true)
+    } else {
+      setBanner(
+        <Alert status={'error'} rounded={5} variant={'left-accent'}>
+          <AlertIcon />
+          <AlertTitle>An error occured while fetching details/userinfo.json.</AlertTitle>
+          <AlertDescription>
+            Error message: {error.message}
+          </AlertDescription>
+        </Alert>
+      )
+    }
+  }
+
   // User info
-  queryPortalAuthenticated(
-    "timetable/userinfo.json",
-    (raw) => {
-      setData( draft => {
-        // noinspection JSValidateTypes
-        draft.name = raw["givenName"] + " " + raw["surname"]
-        draft.studentID = raw["studentId"]
-        draft.email = raw["email"]
-        draft.role = raw["role"]
-        draft.department = raw["department"]
-      })},
-      error => {
-        if (error.message === "401") {
-          setShouldLogin(true)
-        } else {
-          setBanner(
-            <Alert status={'error'} rounded={5} variant={'left-accent'}>
-              <AlertIcon />
-              <AlertTitle>An error occured while fetching details/userinfo.json.</AlertTitle>
-              <AlertDescription>
-                Error message: {error.message}
-              </AlertDescription>
-            </Alert>
-          )
-        }
-      }
+  queryPortalAuthenticated("details/userinfo.json", (raw) => setData(draft => {
+      // noinspection JSValidateTypes
+      draft.name = raw['givenName'] + ' ' + raw['surname'];
+      draft.studentID = raw['studentId'];
+      draft.email = raw['email'];
+      draft.role = raw['role'];
+      draft.department = raw['department'];
+    }), failureCallback
   )
 
   // Day Timetable
-  queryPortalAuthenticated(
-    "timetable/daytimetable.json",
-    (raw) => {
-      setData( draft => {
-        // noinspection JSValidateTypes
-        draft.name = raw["givenName"] + " " + raw["surname"]
-        draft.studentID = raw["studentId"]
-        draft.email = raw["email"]
-        draft.role = raw["role"]
-        draft.department = raw["department"]
-      })},
-    error => {
-      if (error.message === "401") {
-        setShouldLogin(true)
-      } else {
-        setBanner(
-          <Alert status={'error'} rounded={5} variant={'left-accent'}>
-            <AlertIcon />
-            <AlertTitle>An error occured while fetching details/userinfo.json.</AlertTitle>
-            <AlertDescription>
-              Error message: {error.message}
-            </AlertDescription>
-          </Alert>
-        )
-      }
-    }
+  queryPortalAuthenticated("timetable/bells.json", (raw) => setData(draft => {
+      draft.term = raw['term'];
+      draft.week = raw['week'];
+      draft.weekType = raw['weekType'];
+      draft.day = raw['day'];
+    }), failureCallback
   )
 
   return data;
