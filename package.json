@@ -4,7 +4,7 @@
   "description": "Organise your school routine with Timetabl.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "npm start --workspace=packages/app"
   },
   "repository": {
     "type": "git",
