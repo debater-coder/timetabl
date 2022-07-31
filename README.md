@@ -1,3 +1,5 @@
+### This repositiory will no longer be maintained. Timetabl has moved to: https://github.com/debater-coder/timetabl-app
+
 # Timetabl
 
 [![CodeQL](https://github.com/debater-coder/timetabl/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/debater-coder/timetabl/actions/workflows/codeql-analysis.yml)
